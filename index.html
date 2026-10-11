@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riset Integratif — Manusia & Rahmatan lil 'Alamin</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #e8e0d5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: #fdfaf6;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            position: relative;
+            min-height: 90vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .page {
+            display: none;
+            padding: 50px 60px;
+            flex-direction: column;
+            flex: 1;
+            animation: fadeIn 0.3s ease;
+        }
+        .page.active { display: flex; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        h1 {
+            font-size: 28px;
+            color: #1a3c2e;
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 3px double #b99a7b;
+            padding-bottom: 15px;
+        }
+        h2 {
+            font-size: 22px;
+            color: #1a3c2e;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            border-left: 5px solid #b99a7b;
+            padding-left: 15px;
+        }
+        h3 {
+            font-size: 18px;
+            color: #2d5a40;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        h4 {
+            font-size: 16px;
+            color: #3d6b4f;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-style: italic;
+        }
+        p {
+            font-size: 16px;
+            line-height: 1.8;
+            text-align: justify;
+            margin-bottom: 12px;
+            color: #2c3e3e;
+        }
+        .arab {
+            font-size: 22px;
+            text-align: right;
+            direction: rtl;
+            font-family: 'Traditional Arabic', 'Amiri', 'Scheherazade', serif;
+            color: #1a3c2e;
+            margin: 15px 0;
+            padding: 10px 15px;
+            background: #f4efe8;
+            border-radius: 8px;
+            line-height: 2;
+        }
+        .ayat {
+            font-style: italic;
+            color: #4a2e1b;
+            background: #f8f2ea;
+            padding: 10px 18px;
+            border-radius: 6px;
+            margin: 12px 0;
+            border-left: 4px solid #b99a7b;
+            font-size: 15.5px;
+        }
+        ul, ol {
+            margin: 10px 0 15px 25px;
+            color: #2c3e3e;
+            line-height: 1.8;
+        }
+        li { margin-bottom: 6px; font-size: 16px; }
+        .ref {
+            font-size: 14px;
+            color: #6b4f3a;
+            background: #f4efe8;
+            padding: 2px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin: 0 2px;
+        }
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: #e8ddd0;
+            border-top: 2px solid #b99a7b;
+            margin-top: auto;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .nav button {
+            background: #1a3c2e;
+            color: #fdfaf6;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-family: 'Segoe UI', sans-serif;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-weight: bold;
+        }
+        .nav button:hover { background: #2d5a40; }
+        .nav button:disabled {
+            background: #b0a090;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        .page-indicator {
+            font-size: 16px;
+            color: #1a3c2e;
+            font-weight: bold;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .toc-btn {
+            background: transparent;
+            border: 2px solid #1a3c2e;
+            color: #1a3c2e;
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-family: 'Segoe UI', sans-serif;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .toc-btn:hover { background: #1a3c2e; color: #fdfaf6; }
+        .toc-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+        }
+        .toc-overlay.active { display: flex; }
+        .toc-box {
+            background: #fdfaf6;
+            padding: 40px;
+            max-width: 520px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+        .toc-box h2 {
+            text-align: center;
+            border-bottom: 2px solid #b99a7b;
+            padding-bottom: 10px;
+            border-left: none;
+            padding-left: 0;
+        }
+        .toc-box ul { list-style: none; padding: 0; margin: 0; }
+        .toc-box li {
+            padding: 10px 0;
+            border-bottom: 1px solid #e8ddd0;
+            cursor: pointer;
+            font-size: 15px;
+            transition: 0.2s;
+        }
+        .toc-box li:hover { background: #f4efe8; padding-left: 10px; }
+        .close-toc {
+            background: #1a3c2e;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 100%;
+        }
+        @media (max-width: 600px) {
+            .page { padding: 25px 20px; }
+            h1 { font-size: 22px; }
+            h2 { font-size: 18px; }
+            h3 { font-size: 16px; }
+            p { font-size: 15px; }
+            .nav { padding: 10px 15px; flex-direction: column; }
+            .nav button { padding: 8px 20px; font-size: 14px; width: 100%; }
+            .arab { font-size: 18px; }
+        }
+        .separator {
+            border: 0;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #b99a7b, transparent);
+            margin: 25px 0;
+        }
+        .glossary-term { font-weight: bold; color: #1a3c2e; }
+        .ref-list { font-size: 14px; line-height: 1.8; margin-left: 20px; }
+        .ref-list li { margin-bottom: 8px; }
+        .cover-title {
+            font-size: 30px;
+            color: #1a3c2e;
+            text-align: center;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+        .cover-sub {
+            text-align: center;
+            font-size: 18px;
+            color: #2d5a40;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        .cover-small {
+            font-size: 13px;
+            color: #6b4f3a;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .center { text-align: center; }
+        .box-note {
+            background: #f4efe8;
+            border-left: 4px solid #1a3c2e;
+            padding: 12px 18px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 15.5px;
+            line-height: 1.8;
+            color: #2c3e3e;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- ==================== HALAMAN 1: COVER + ABSTRAK ==================== -->
+    <div class="page active" id="page1">
+        <div style="margin-top: 30px;">
+            <div class="cover-small">Kajian Integratif</div>
+            <div class="cover-title">
+                DARI KETIDAKSEMPURNAAN MANUSIA<br>
+                MENUJU RAHMATAN LIL 'ALAMIN
+            </div>
+            <div class="cover-sub">
+                Studi Pustaka Reflektif tentang Fragmentasi Pengetahuan,<br>
+                Krisis Multidimensi, dan Jalan Menuju Kekeluargaan Universal
+            </div>
+            <div class="center" style="margin-top: 15px; font-size: 15px; color: #6b4f3a;">
+                Sebuah Kajian Teologis, Ekonomis, dan Sosiologis
+            </div>
+            <hr class="separator">
+            <div class="center" style="font-size: 14px; color: #6b4f3a;">Dipersembahkan untuk Umat</div>
+        </div>
+
+        <hr class="separator">
+
+        <h2>ABSTRAK</h2>
+        <p>Tulisan ini berangkat dari satu teka-teki intelektual: mengapa krisis kontemporer — ekonomi, ekologis, sosial, psikologis — tampak begitu rumit dan tak terpahami? Argumen utamanya adalah bahwa kerumitan ini bukan sifat inheren krisis, melainkan produk dari fragmentasi pengetahuan: pemisahan artifisial antara domain-domain yang sesungguhnya saling terhubung. Ekonomi dipisahkan dari etika, teologi dari realitas sosial, psikologi dari spiritualitas.</p>
+        <p>Fragmentasi ini bukan sekadar masalah akademis; ia adalah gejala dari krisis yang lebih dalam — erosi kekeluargaan sebagai ikatan dasar manusia. Dengan menggunakan studi pustaka reflektif, tulisan ini mengintegrasikan analisis struktural (sistem moneter, geopolitik, ketimpangan) dengan pembatinan spiritual (fitrah, muhasabah, qana'ah) dalam kerangka rahmatan lil 'alamin.</p>
+        <p>Data empiris digunakan bukan sebagai bukti kausal, melainkan sebagai indikasi: 20 persen remaja Indonesia mengalami kesepian; 1 persen terkaya menangkap 20,3 persen pendapatan global; utang pemerintah global melampaui $102 triliun; 29,1 persen percakapan digital bersifat toksik.</p>
+        <p>Tulisan ini tidak menawarkan solusi instan. Ia menawarkan kerangka analitis tiga level — makro, meso, mikro — yang memungkinkan pembacaan krisis secara terpadu. Kontribusi utamanya adalah menunjukkan bahwa rahmatan lil 'alamin bukan slogan teologis, melainkan kerangka operasional yang dapat diterjemahkan menjadi praksis sosial, ekonomi, dan politik. Rahmatan lil 'alamin bukan tujuan akhir, melainkan arah perjalanan.</p>
+
+        <h3>Kata Kunci:</h3>
+        <p><em>fragmentasi pengetahuan, rahmatan lil 'alamin, qana'ah, fitrah, krisis multidimensi, ekonomi Islam, kekeluargaan universal.</em></p>
+    </div>
+
+    <!-- ==================== HALAMAN 2: BAB 1 ==================== -->
+    <div class="page" id="page2">
+        <h1>BAB 1</h1>
+        <h2>PENDAHULUAN — SEBUAH TEKA-TEKI INTELEKTUAL</h2>
+
+        <h3>1.1 Dua Pengamatan yang Mengganggu</h3>
+        <p>Ada dua pengamatan yang mengganggu saya selama bertahun-tahun. Keduanya tampak sederhana, tetapi konsekuensinya sangat besar.</p>
+
+        <h4>Pengamatan Pertama: Krisis kontemporer tampak rumit.</h4>
+        <p>Ekonomi global terguncang oleh utang yang tak terbayarkan, ketimpangan yang melebar, dan sistem moneter yang rapuh. Ekologi berada di ambang keruntuhan. Masyarakat terpolarisasi. Individu mengalami krisis makna dan kesepian yang belum pernah terjadi sebelumnya. Setiap krisis ini dibahas oleh para ahli di bidangnya masing-masing — ekonom, ilmuwan lingkungan, sosiolog, psikolog. Tetapi tidak ada yang benar-benar menghubungkannya. Setiap krisis tampak seperti fenomena yang berdiri sendiri, dengan penyebab dan solusi yang terpisah.</p>
+
+        <h4>Pengamatan Kedua: Sumber daya spiritual sering tidak terhubung dengan realitas.</h4>
+        <p>Teologi dibahas di ruangnya sendiri, terpisah dari ekonomi. Etika Islam dibahas tanpa kaitan dengan sistem moneter global. Konsep rahmatan lil 'alamin disebutkan dalam khutbah dan seminar, tetapi jarang dioperasionalkan menjadi kebijakan atau gerakan.</p>
+
+        <p><strong>Teka-teki yang muncul:</strong> Apakah kedua pengamatan ini terhubung? Apakah kerumitan krisis — atau lebih tepatnya, <em>tampilan</em> kerumitannya — adalah produk dari cara kita memahaminya? Dan apakah sumber daya spiritual kita — fitrah, muhasabah, qana'ah, rahmatan lil 'alamin — dapat menjadi lensa yang menyatukan kembali apa yang telah terfragmentasi?</p>
+
+        <p>Tulisan ini adalah upaya menjawab teka-teki itu. Saya tidak mengklaim memiliki jawaban lengkap. Saya hanya mengklaim bahwa pertanyaan ini penting, dan bahwa cara kita memahaminya memiliki konsekuensi praktis yang serius.</p>
+
+        <h3>1.2 Fragmentasi Pengetahuan: Lebih dari Sekadar Spesialisasi</h3>
+        <p>Fragmentasi pengetahuan sering dipahami secara dangkal sebagai "spesialisasi" — pembagian kerja intelektual yang wajar dalam masyarakat modern. Tetapi fragmentasi yang saya maksud lebih dalam dari itu. Ia adalah <em>pemisahan ontologis</em>: pemisahan yang mengasumsikan bahwa domain-domain realitas memang terpisah secara fundamental.</p>
+        <p>Ekonomi dianggap sebagai domain yang memiliki hukumnya sendiri — hukum pasar, efisiensi, maksimalisasi keuntungan — yang beroperasi terlepas dari pertimbangan moral. Teologi dianggap sebagai domain yang memiliki hukumnya sendiri yang beroperasi terlepas dari realitas sosial-ekonomi. Psikologi dianggap sebagai domain yang memiliki hukumnya sendiri yang beroperasi terlepas dari dimensi spiritual.</p>
+        <p>Pemisahan ini bukan netral. Ketika ekonomi dipisahkan dari etika, maka "efisiensi" menjadi tujuan akhir, dan pertanyaan tentang keadilan menjadi sekunder. Ketika teologi dipisahkan dari realitas sosial, maka agama menjadi urusan privat, dan pertanyaan tentang keadilan struktural menjadi di luar jangkauan. Ketika psikologi dipisahkan dari spiritualitas, maka kesehatan mental menjadi urusan teknis, dan pertanyaan tentang makna hidup menjadi terpinggirkan.</p>
+        <p>Fragmentasi pengetahuan, dengan kata lain, bukan hanya tentang ketidaktahuan. Ia adalah tentang <em>ketidakmampuan untuk melihat keterkaitan</em> — dan ketidakmampuan ini memiliki konsekuensi praktis yang serius.</p>
+
+        <h3>1.3 Mengapa Ini Penting Sekarang: Data sebagai Indikasi</h3>
+        <p>Mari kita lihat beberapa data — bukan sebagai bukti kausal, tetapi sebagai indikasi bahwa ada sesuatu yang perlu diperhatikan.</p>
+
+        <h4>Kesepian</h4>
+        <p>Menteri Kependudukan dan Pembangunan Keluarga/Kepala BKKBN Wihaji menyatakan bahwa 20 persen remaja Indonesia mengalami kesepian yang membahayakan kesehatan mental. Sekitar 34 persen remaja Indonesia mengalami kesepian akibat terlalu sering mengakses gawai. Wihaji menyebut fenomena ini sebagai munculnya "keluarga baru handphone" — di mana gawai mengambil alih peran komunikasi manusia. Health Collaborative Center dalam survei terhadap 1.226 responden di Jakarta, Depok, Tangerang, dan Bekasi pada 2023 menemukan bahwa 49 persen responden tidak menyadari bahwa gejala yang mereka alami merupakan indikasi kesepian.</p>
+
+        <h4>Ketimpangan</h4>
+        <p>World Inequality Database mencatat bahwa 1% terkaya menangkap 20,3% pendapatan global pada 2025 — naik 3,4 poin persentase sejak 1980. Oxfam melaporkan bahwa kekayaan miliarder global melonjak 16% pada 2025, mencapai rekor $18,3 triliun.</p>
+
+        <h4>Utang</h4>
+        <p>Utang pemerintah global telah mencapai rekor historis sekitar $102 triliun pada 2024, menurut laporan UNCTAD "A World of Debt 2025."</p>
+
+        <h4>Polarisasi Digital</h4>
+        <p>Riset Monash Data & Democracy Research Hub menganalisis hampir 10 juta percakapan digital sepanjang 25–31 Agustus 2025. Dari 13.780 unggahan orisinal: 29,1 persen toksik, 20 persen bermuatan polarisasi, emosi dominan kemarahan (47,3 persen).</p>
+
+        <h4>Konsumerisme</h4>
+        <p>Penelitian di UIN Walisongo Semarang menemukan qana'ah berkorelasi negatif sangat kuat dengan perilaku konsumtif pada mahasiswi yang berbelanja online (koefisien -0,886, signifikansi 0,000; n = 129).</p>
+
+        <p>Data-data ini, jika dibaca secara terpisah, tampak seperti fenomena yang berbeda. Tetapi jika dibaca secara terpadu — melalui lensa fragmentasi pengetahuan — mereka mulai menunjukkan pola: <strong>manusia terputus</strong>. Terputus dari dirinya sendiri, terputus dari sesamanya, terputus dari makna, dan terputus dari masa depannya.</p>
+
+        <h3>1.4 Pertanyaan Penelitian</h3>
+        <ol>
+            <li>Bagaimana kerangka rahmatan lil 'alamin dapat dioperasionalkan sebagai lensa analitis untuk membaca krisis multidimensi kontemporer?</li>
+            <li>Apa keterkaitan antara fragmentasi pengetahuan, krisis sosial-ekonomi, dan erosi kekeluargaan?</li>
+            <li>Bagaimana umat Islam dapat merespons fragmentasi ini secara terpadu — teologis, ekonomi, dan sosial?</li>
+            <li>Pada level apa saja (makro, meso, mikro) respons tersebut harus dioperasionalkan agar efektif?</li>
+            <li>Apa agenda riset dan aksi yang dapat menjembatani analisis reflektif ini dengan perubahan konkret?</li>
+        </ol>
+
+        <h3>1.5 Argumen Utama dan Struktur Tulisan</h3>
+        <div class="box-note">
+            <strong>Argumen utama:</strong> Fragmentasi pengetahuan bukan sekadar masalah akademis, melainkan akar dari krisis multidimensi; dan rahmatan lil 'alamin — sebagai kerangka integratif yang berakar pada fitrah, muhasabah, dan qana'ah — dapat menjadi lensa untuk membaca dan merespons krisis ini secara terpadu.
+        </div>
+        <p>Argumen ini dikembangkan dalam beberapa langkah: Bagian II menjelaskan metodologi. Bagian III–X mengembangkan kerangka analitis dalam delapan tahap: dari fitrah (Tahap 0) hingga implementasi kebijakan (Tahap 7). Bagian XI menyintesiskan temuan menjadi kerangka tiga level. Bagian XII merumuskan agenda riset dan aksi. Bagian XIII menyimpulkan.</p>
+
+        <h3>1.6 Catatan tentang Posisi</h3>
+        <p>Saya menulis dari dalam tradisi Islam. Ini bukan klaim bahwa hanya Islam yang memiliki kebenaran, atau bahwa tradisi lain tidak layak dipelajari. Ini adalah pengakuan bahwa kerangka analitis yang saya gunakan berakar pada tradisi Islam, dan bahwa saya memandang tradisi ini sebagai sumber daya yang kaya untuk memahami dan merespons krisis kontemporer.</p>
+        <p>Saya juga menulis dari tradisi Sunni yang inklusif, dengan pengaruh Sufi dan modernis. Saya tidak mengklaim mewakili "Islam" secara monolitik. Saya hanya mengklaim bahwa apa yang saya tulis adalah salah satu cara — bukan satu-satunya cara — untuk memahami krisis dari perspektif Islam.</p>
+        <p>Akhirnya, saya menulis sebagai manusia yang tidak sempurna. Saya memiliki bias, keterbatasan, dan kelemahan. Saya tidak mengklaim netralitas. Saya hanya mengklaim kejujuran tentang posisi saya.</p>
+    </div>
+
+    <!-- ==================== HALAMAN 3: BAB 2 ==================== -->
+    <div class="page" id="page3">
+        <h1>BAB 2</h1>
+        <h2>METODOLOGI — STUDI PUSTAKA REFLEKTIF</h2>
+
+        <h3>2.1 Mengapa Reflektif, Bukan Netral?</h3>
+        <p>Ada dua pendekatan umum dalam penelitian kualitatif. Pendekatan pertama mengklaim netralitas: peneliti berusaha menghilangkan pengaruhnya terhadap objek. Pendekatan kedua mengakui posisi: peneliti mengakui bahwa ia tidak bisa sepenuhnya netral, dan justru dengan mengakui posisinya, ia menjadi lebih transparan.</p>
+        <p>Tulisan ini menggunakan pendekatan kedua. Alasannya bukan karena netralitas tidak mungkin. Alasannya adalah karena <em>klaim netralitas sering kali menyembunyikan asumsi yang tidak diakui</em>.</p>
+        <p>Seorang ekonom yang mengklaim netralitas mungkin tidak menyadari bahwa kerangka analitisnya — efisiensi, maksimalisasi keuntungan — adalah pilihan normatif, bukan deskripsi realitas yang netral. Seorang teolog yang mengklaim netralitas mungkin tidak menyadari bahwa penafsirannya dipengaruhi oleh konteks sosial dan politiknya.</p>
+        <p>Dengan mengakui posisi, penulis tidak melemah — ia justru memperkuat transparansi. Pembaca tidak perlu menebak dari mana penulis berbicara; ia diberitahu.</p>
+
+        <h3>2.2 Posisi Penulis</h3>
+        <p>Saya menulis dari dalam tradisi Islam. Konsekuensi dari posisi ini:</p>
+        <ul>
+            <li><strong>Pertama</strong>, literatur primer yang saya gunakan mayoritas adalah Al-Qur'an, Hadis, dan karya ulama klasik dan kontemporer dalam tradisi Islam.</li>
+            <li><strong>Kedua</strong>, literatur sekunder mencakup karya akademik dari berbagai tradisi — ekonomi, psikologi, sosiologi, sejarah — tetapi dipilih dan ditafsirkan melalui lensa tradisi Islam.</li>
+            <li><strong>Ketiga</strong>, setiap klaim yang masih diperdebatkan ditandai; setiap tahap disertakan bacaan yang menantang, bukan hanya yang mendukung.</li>
+        </ul>
+
+        <h3>2.3 Sumber Data</h3>
+        <h4>Literatur Primer</h4>
+        <ul>
+            <li>Al-Qur'an dan Hadis (Shahih Bukhari, Shahih Muslim, Sunan Abu Daud, Sunan Tirmidzi, Sunan Ibnu Majah)</li>
+            <li>Al-Ghazali, <em>Ihya' 'Ulum al-Din</em> dan <em>Faishal al-Tafriqah</em></li>
+            <li>Ibnu Khaldun, <em>Muqaddimah</em></li>
+            <li>Ibnu Qayyim al-Jawziyyah, <em>Madarij al-Salikin</em></li>
+            <li>Ibnu Hazm, <em>Al-Fasl fi al-Milal wa al-Ahwa' wa al-Nihal</em></li>
+        </ul>
+        <h4>Literatur Sekunder</h4>
+        <ul>
+            <li>Buku akademik: Chapra, Kuran, Tripp, Dalio, Kahneman, Bandura, Festinger, Tajfel &amp; Turner</li>
+            <li>Artikel jurnal: JOCRISE, Cadmus, Hermeneutik, Science, Journal of Personality and Social Psychology</li>
+            <li>Laporan lembaga: World Inequality Database, IPEA, Monash Data &amp; Democracy Research Hub, BKKBN, IIF, UNCTAD, Oxfam, Health Collaborative Center</li>
+        </ul>
+
+        <h3>2.4 Teknik Analisis</h3>
+        <p>Analisis dilakukan secara tematik dengan menginterpretasikan relevansi nilai-nilai rahmatan lil 'alamin terhadap upaya membangun solidaritas sosial di masyarakat modern. Data kuantitatif digunakan sebagai <em>indikasi</em>, bukan <em>kesimpulan</em> — untuk menunjukkan bahwa ada sesuatu yang perlu diperhatikan, bukan untuk membuktikan kausalitas.</p>
+        <p>Prosedur:</p>
+        <ol>
+            <li>Identifikasi dan pengumpulan sumber yang relevan</li>
+            <li>Pemilahan tematik berdasarkan tema besar</li>
+            <li>Analisis integratif dengan mempertemukan perspektif teologis dan ilmiah</li>
+            <li>Validasi silang antar sumber</li>
+            <li>Penyusunan sintesis menjadi narasi utuh</li>
+        </ol>
+        <p>Proses koding tematik dilakukan secara manual dengan pola induktif-deduktif. Untuk mengelola subjektivitas, peneliti melakukan triangulasi sumber: setiap klaim teologis diuji silang dengan setidaknya dua referensi independen, dan setiap klaim ilmiah diuji dengan literatur peer-reviewed.</p>
+
+        <h3>2.5 Validitas Interpretasi</h3>
+        <p>Tiga strategi:</p>
+        <ul>
+            <li><strong>Triangulasi sumber:</strong> membandingkan literatur primer, sekunder, dan data empiris.</li>
+            <li><strong>Deskripsi tebal:</strong> menjelaskan konteks setiap klaim.</li>
+            <li><strong>Refleksivitas:</strong> mengakui pengaruh posisi penulis terhadap pemilihan dan penafsiran literatur.</li>
+        </ul>
+        <p>Pembaca diundang untuk tidak hanya menerima, tetapi juga mempertanyakan.</p>
+
+        <h3>2.6 Batasan Penelitian</h3>
+        <ul>
+            <li>Tidak ada data primer; seluruh analisis berbasis literatur yang tersedia</li>
+            <li>Tidak ada uji empiris; klaim kausalitas tidak dapat ditarik</li>
+            <li>Generalisasi terbatas pada konteks Indonesia dan dunia Muslim</li>
+            <li>Posisi penulis sebagai Muslim memengaruhi pemilihan literatur dan penekanan analitis</li>
+            <li>Tidak membahas secara mendalam dimensi politik dan ekonomi dari perpecahan umat</li>
+        </ul>
+
+        <h3>2.7 Usulan Pengembangan ke Studi Empiris</h3>
+        <p>Penelitian ini dapat dilanjutkan dengan desain mixed-methods:</p>
+        <ol>
+            <li>Survei longitudinal tentang qana'ah dan perilaku konsumtif pada sampel yang lebih luas</li>
+            <li>Eksperimen sosial untuk menguji efektivitas dakwah digital dalam mengubah perilaku, bukan hanya kognisi</li>
+            <li>Studi kasus komparatif tentang model ekonomi Islam skala komunitas di Indonesia, Malaysia, dan Turki</li>
+            <li>Analisis wacana kritis terhadap polarisasi digital di media sosial Indonesia</li>
+        </ol>
+    </div>
+
+    <!-- ==================== HALAMAN 4: BAB 3 ==================== -->
+    <div class="page" id="page4">
+        <h1>BAB 3</h1>
+        <h2>TAHAP 0: FITRAH DAN KETIDAKSEMPURNAAN MANUSIA — FONDASI TEOLOGIS</h2>
+
+        <h3>3.1 Mengapa Memulai dari Fitrah?</h3>
+        <p>Setiap analisis tentang krisis — ekonomi, sosial, politik — berangkat dari asumsi tentang hakikat manusia. Asumsi ini sering kali tidak diakui, tetapi ia menentukan arah analisis.</p>
+        <p>Ekonomi neoklasik berangkat dari asumsi bahwa manusia adalah <em>homo economicus</em> — makhluk rasional yang memaksimalkan kepentingannya sendiri. Asumsi ini bukan deskripsi netral; ia adalah pilihan normatif yang memiliki konsekuensi.</p>
+        <p>Islam berangkat dari asumsi yang berbeda. Manusia diciptakan dalam keadaan lemah dan tidak sempurna.</p>
+
+        <div class="ayat">"Allah hendak memberikan keringanan kepadamu, karena manusia diciptakan dalam keadaan lemah."<br>(QS. An-Nisa [4]: 28)</div>
+
+        <div class="ayat">"Setiap anak Adam sering berbuat salah, dan sebaik-baik orang yang berbuat salah adalah yang bertobat."<br>(HR. Tirmidzi no. 2499; Ibnu Majah no. 4251)</div>
+
+        <div class="ayat">"Aku hanyalah manusia biasa seperti kalian, terkadang lupa sebagaimana kalian lupa."<br>(HR. Bukhari no. 401; Muslim no. 570)</div>
+
+        <p>Implikasi dari pengakuan ini sangat besar:</p>
+        <ul>
+            <li>Sistem apa pun yang menuntut kesempurnaan dari manusia pasti gagal</li>
+            <li>Sistem apa pun yang mengasumsikan manusia selalu rasional dan selalu bertindak benar pasti rapuh</li>
+            <li>Sistem apa pun yang mengabaikan dimensi moral dan spiritual manusia pasti menghasilkan krisis</li>
+        </ul>
+
+        <h3>3.2 Kelemahan Manusia: Tafsir yang Mendalam</h3>
+        <p>Kata yang digunakan dalam ayat di atas adalah <em>da'ifan</em> — bentuk kata sifat yang menunjukkan kelemahan yang melekat, bukan kelemahan yang sementara. Dalam bahasa Arab, kata ini memiliki konotasi:</p>
+        <ul>
+            <li><strong>Kelemahan fisik:</strong> Manusia lahir tanpa daya, tumbuh dengan segala keterbatasan, dan menjalani hidup dengan ketergantungan yang tidak pernah benar-benar berakhir.</li>
+            <li><strong>Kelemahan psikologis:</strong> Manusia mudah tergoda oleh hawa nafsu, mudah terpengaruh oleh emosi, mudah goyah oleh tekanan sosial.</li>
+            <li><strong>Kelemahan kognitif:</strong> Manusia memiliki kapasitas terbatas untuk memproses informasi. Ia menggunakan heuristik yang efisien tetapi rawan bias.</li>
+            <li><strong>Kelemahan spiritual:</strong> Manusia mudah lupa. Ia mudah tergoda oleh dunia dan melupakan tujuan akhirat.</li>
+        </ul>
+        <p>Yang penting adalah: kelemahan ini <em>bukan cacat desain</em>. Ia adalah bagian dari desain yang memungkinkan pertumbuhan. Allah menghendaki untuk meringankan beban manusia, dan kelemahan itu justru menjadi ruang di mana rahmat bekerja.</p>
+
+        <h3>3.3 Muhasabah: Alat untuk Mengelola Kelemahan</h3>
+        <p>Jika manusia diciptakan lemah, bagaimana ia bisa hidup dengan baik? Jawabannya adalah muhasabah — introspeksi diri.</p>
+
+        <div class="ayat">"Wahai orang-orang yang beriman! Bertakwalah kepada Allah dan hendaklah setiap diri memperhatikan apa yang telah diperbuatnya untuk hari esok (akhirat)."<br>(QS. Al-Hasyr [59]: 18)</div>
+
+        <div class="ayat">"Orang yang cerdas adalah orang yang menghisab dirinya dan beramal untuk kehidupan setelah kematian."<br>(HR. Tirmidzi no. 2459)</div>
+
+        <p>Al-Ghazali dalam <em>Ihya' Ulum al-Din</em> mengajarkan bahwa muhasabah memiliki enam tahap:</p>
+        <ol>
+            <li><strong>Musyarathah</strong> — penetapan syarat: sebelum beramal, seseorang menetapkan syarat-syarat yang harus dipenuhi</li>
+            <li><strong>Muraqabah</strong> — pengawasan: selama beramal, seseorang mengawasi dirinya sendiri</li>
+            <li><strong>Muhasabah</strong> — introspeksi diri: setelah beramal, seseorang mengevaluasi apa yang telah dilakukan</li>
+            <li><strong>Mu'aqabah</strong> — pemberian sanksi pada diri sendiri</li>
+            <li><strong>Mujahadah</strong> — perjuangan melawan hawa nafsu</li>
+            <li><strong>Mu'atabah</strong> — mencela diri sendiri ketika melakukan kesalahan</li>
+        </ol>
+        <p>Muhasabah bukan sekadar ritual menghitung dosa di akhir malam. Ia adalah keberanian untuk bertanya dengan jujur: Mengapa aku begitu mudah tersinggung ketika kelompokku dikritik? Mengapa aku begitu cepat percaya pada kabar buruk tentang orang yang berbeda pendapat denganku? Pertanyaan-pertanyaan ini tidak nyaman, tetapi justru di situlah letak obatnya.</p>
+
+        <h3>3.4 Fitrah sebagai Potensi Dinamis</h3>
+        <p>Fitrah manusia, dalam kerangka ini, bukan kondisi statis, melainkan potensi dinamis yang membutuhkan pengelolaan. Al-Ghazali memandang hati sebagai cermin yang bisa berkarat jika tidak dibersihkan melalui zikir dan muhasabah.</p>
+        <p>Perbedaan utama antara psikologi Barat dan psikologi Islam:</p>
+        <ul>
+            <li>Psikologi Barat cenderung melihat bias dan kesalahan sebagai "bug" dalam sistem kognitif yang perlu diperbaiki secara teknis</li>
+            <li>Psikologi Islam melihatnya sebagai bagian dari ujian spiritual yang membutuhkan pengenalan diri, pertobatan, dan pengembalian diri kepada Allah</li>
+        </ul>
+        <p>Keduanya saling melengkapi. Psikologi Barat membantu kita memahami mekanisme kesalahan, sedangkan psikologi Islam membantu kita memahami makna dan tujuan dari perbaikan diri.</p>
+
+        <h3>3.5 Teodisi: Mengapa Allah Menciptakan Manusia Lemah?</h3>
+        <p>Ada beberapa jawaban yang diberikan oleh ulama klasik:</p>
+        <ul>
+            <li><strong>Kelemahan adalah bagian dari ujian.</strong> Allah menciptakan manusia lemah agar manusia bisa menguji dirinya sendiri (QS. Al-Mulk [67]: 2).</li>
+            <li><strong>Kelemahan adalah ruang bagi rahmat.</strong> Jika manusia sempurna, ia tidak membutuhkan rahmat Allah.</li>
+            <li><strong>Kelemahan adalah sumber pertumbuhan.</strong> Manusia belajar dan tumbuh melalui kesalahan.</li>
+            <li><strong>Kelemahan adalah misteri.</strong> Pada akhirnya, kita tidak bisa sepenuhnya memahami mengapa Allah menciptakan manusia lemah (QS. Al-Isra [17]: 85).</li>
+        </ul>
+        <p>Al-Ghazali berargumen bahwa kelemahan manusia adalah konsekuensi dari desain yang memiliki tujuan tertentu — yaitu, agar manusia bisa mengenal Allah, mencintai Allah, dan mencapai kebahagiaan sejati.</p>
+
+        <h3>3.6 Hubungan Kelemahan dan Kejahatan</h3>
+        <p>Kelemahan bisa menyebabkan keduanya, tergantung pada bagaimana ia dikelola. Kelemahan yang tidak dikelola menyebabkan keserakahan, fanatisme, perpecahan, dan kelalaian. Kelemahan yang dikelola dengan baik menyebabkan kerendahan hati, kasih sayang, kerja sama, dan kesadaran.</p>
+        <p>Mekanisme yang menentukan apakah kelemahan menghasilkan krisis atau kebaikan adalah <strong>muhasabah</strong>.</p>
+        <div class="box-note">
+            Tanpa muhasabah: kelemahan → keserakahan → krisis → memperkuat kelemahan<br>
+            Dengan muhasabah: kelemahan → kesadaran → perbaikan → memperkuat kebaikan
+        </div>
+    </div>
+
+    <!-- ==================== HALAMAN 5: BAB 4 ==================== -->
+    <div class="page" id="page5">
+        <h1>BAB 4</h1>
+        <h2>TAHAP 1: ISLAM VS KAPITALISME — FONDASI IDEOLOGIS</h2>
+
+        <h3>4.1 Dua Kutub yang Berlawanan?</h3>
+        <p>Prof. Asad Zaman berpendapat kapitalisme dan Islam adalah kutub yang berlawanan dalam segala dimensi utamanya.</p>
+        <ul>
+            <li><strong>Kapitalisme</strong> berdiri di atas: individualisme, kerakusan, persaingan, hedonisme</li>
+            <li><strong>Sistem Islam</strong> berdiri di atas: tanggung jawab sosial, kedermawanan, kerja sama, mengejar kesuksesan di akhirat</li>
+        </ul>
+        <p>M. Umer Chapra, yang diakui sebagai salah satu dari Top 50 Global Leaders dalam ekonomi Islam, memperkuat argumen ini dalam <em>The Future of Economics: An Islamic Perspective</em> (2000). Ia menunjukkan bahwa paradigma konvensional gagal karena mengabaikan dimensi moral dan spiritual manusia.</p>
+        <p>Kritik terhadap teori ekonomi kapitalisme mencakup: ketidakmampuannya mengentaskan kemiskinan dan ketimpangan pendapatan; ketidakmampuannya menyelaraskan kepentingan individu dengan kepentingan kolektif; ketidakmampuannya mencegah krisis keuangan yang berulang.</p>
+        <p>Tetapi ada masalah dengan klaim ini. Klaim bahwa "Islam dan kapitalisme berlawanan" adalah <em>klaim normatif</em>, bukan <em>deskriptif</em>. Ia menggambarkan apa yang seharusnya, bukan apa yang senyatanya.</p>
+
+        <h3>4.2 Bacaan Penantang: Apakah Ekonomi Islam Benar-benar Alternatif?</h3>
+        <p>Timur Kuran dalam <em>Islam and Mammon: The Economic Predicaments of Islamism</em> (2004) mempertanyakan apakah "ekonomi Islam" benar-benar alternatif, atau cuma penyesuaian kapitalisme dengan label Islam.</p>
+        <p>Kuran menunjukkan bahwa banyak institusi ekonomi Islam — bank syariah, takaful, sukuk — secara fungsional mirip dengan institusi konvensional, hanya berbeda dalam label dan legitimasi agama.</p>
+        <ul>
+            <li>Bank syariah menggunakan kontrak murabahah yang secara ekonomi setara dengan bunga</li>
+            <li>Takaful menggunakan prinsip tabarru' yang secara ekonomi setara dengan premi</li>
+            <li>Sukuk menggunakan prinsip ijarah yang secara ekonomi setara dengan obligasi konvensional</li>
+        </ul>
+        <p>Charles Tripp dalam <em>Islam and the Moral Economy</em> (2006) menunjukkan bahwa mereka yang mencoba merespons kapitalisme telah menemukan bahwa kekuatannya bukan hanya kekuatan material, tetapi juga kekuatan imajinatif.</p>
+
+        <h3>4.3 Analisis Kritis: Mengapa Kritik Ini Penting?</h3>
+        <p>Kritik Kuran dan Tripp tidak boleh diabaikan. Mereka mengingatkan bahwa:</p>
+        <ul>
+            <li>"Ekonomi Islam" tidak otomatis menjadi alternatif jika hanya menjadi label di atas struktur yang sama.</li>
+            <li>Diperlukan transformasi yang lebih mendalam: perubahan orientasi dari akumulasi ke distribusi, dari kompetisi ke kerja sama, dari konsumerisme ke qana'ah.</li>
+            <li>Tanpa transformasi ini, "ekonomi Islam" bisa menjadi alat legitimasi status quo, bukan alat perubahan.</li>
+        </ul>
+        <p>Ini berarti ekonomi Islam membutuhkan fondasi yang lebih dalam dari sekadar label. Ia membutuhkan transformasi individu (qana'ah, muhasabah) dan transformasi struktur (sistem moneter, kebijakan publik).</p>
+
+        <h3>4.4 Mengapa Kapitalisme Begitu Kuat?</h3>
+        <p>Jika kapitalisme begitu bermasalah, mengapa ia begitu kuat? Ada beberapa alasan:</p>
+        <ul>
+            <li><strong>Kapitalisme selaras dengan kelemahan manusia.</strong> Ia mengakomodasi keserakahan, individualisme, dan hedonisme.</li>
+            <li><strong>Kapitalisme menjanjikan kebebasan.</strong> Ia menawarkan kebebasan untuk memilih, memiliki, dan mengejar keuntungan.</li>
+            <li><strong>Kapitalisme memberi insentif untuk inovasi.</strong> Ia mendorong kompetisi yang menghasilkan kemajuan teknologi.</li>
+            <li><strong>Kapitalisme memiliki mekanisme adaptasi.</strong> Ia mampu menyerap kritik dan mengubah dirinya.</li>
+        </ul>
+        <p>Implikasi: Kritik terhadap kapitalisme tidak cukup hanya dengan mengatakan "kapitalisme buruk." Kritik harus mampu menjelaskan mengapa kapitalisme bertahan, dan apa yang bisa menggantikannya.</p>
+
+        <h3>4.5 Apa yang Bisa Dipelajari dari Kritik?</h3>
+        <ul>
+            <li>Jangan terjebak dalam formalisme. Ekonomi Islam bukan tentang label halal-haram, tetapi tentang keadilan dan kesejahteraan.</li>
+            <li>Jangan mengabaikan realitas kekuasaan. Kapitalisme bukan hanya sistem ekonomi; ia adalah sistem kekuasaan.</li>
+            <li>Jangan meromantisasi masa lalu. Ekonomi Islam di masa keemasan bukanlah utopia.</li>
+            <li>Jangan menyerah pada sinisme. Cita-cita keadilan ekonomi tetap valid.</li>
+        </ul>
+    </div>
+
+    <!-- ==================== HALAMAN 6: BAB 5 ==================== -->
+    <div class="page" id="page6">
+        <h1>BAB 5</h1>
+        <h2>TAHAP 2: SISTEM MONETER GLOBAL &amp; KRISIS UTANG — MEKANISME TEKNIS</h2>
+
+        <h3>5.1 Peringatan Ray Dalio: Uang adalah Utang</h3>
+        <p>Ray Dalio dalam <em>How Countries Go Broke: The Big Debt Cycle</em> (2025) memperingatkan bahwa semua mata uang fiat sedang dalam masalah. Dalio berargumen bahwa "uang adalah utang" — mata uang fiat pada dasarnya adalah janji untuk menerima pembayaran.</p>
+
+        <h4>Mekanisme Krisis Utang:</h4>
+        <ol>
+            <li>Pemerintah mengeluarkan obligasi untuk membiayai defisit.</li>
+            <li>Bank sentral membeli obligasi tersebut dengan mencetak uang baru.</li>
+            <li>Uang baru masuk ke sistem keuangan, menciptakan inflasi.</li>
+            <li>Inflasi menurunkan nilai riil utang.</li>
+            <li>Namun, inflasi juga menurunkan daya beli masyarakat.</li>
+            <li>Ketika inflasi tidak terkendali, kepercayaan terhadap mata uang runtuh.</li>
+        </ol>
+        <p>Data terkini mendukung peringatan ini. Utang pemerintah global mencapai sekitar $102 triliun pada 2024, rekor historis tertinggi.</p>
+        <p>Daniel Lacalle menunjukkan bahwa sejarah mata uang fiat selalu sama: pertama, pemerintah melampaui batas kredit mereka; kedua, mereka mencetak uang untuk membayar utang; ketiga, mata uang itu kehilangan nilainya.</p>
+
+        <h3>5.2 Alternatif Berbagi Risiko: Abbas Mirakhor</h3>
+        <p>Abbas Mirakhor (2025), dalam penelitian terbarunya di <em>Journal of Critical Realism in Socio-Economics</em>, secara kritis membandingkan operasi kebijakan moneter dalam dua arsitektur keuangan.</p>
+
+        <h4>Sistem Utang Berbasis Bunga:</h4>
+        <ul>
+            <li>Berpusat pada manipulasi suku bunga</li>
+            <li>Perbankan cadangan fraksional</li>
+            <li>Menyebabkan utang global yang berlebihan</li>
+            <li>Menciptakan kerapuhan finansial</li>
+            <li>Memperlebar ketimpangan sosial-ekonomi</li>
+        </ul>
+
+        <h4>Sistem Berbagi Risiko Berbasis Ekuitas:</h4>
+        <ul>
+            <li>Terintegrasi dengan ekonomi riil</li>
+            <li>Bebas dari utang berbasis bunga</li>
+            <li>Diatur oleh kontrak partisipatif: mudarabah, musharakah</li>
+            <li>Menciptakan ketahanan terhadap krisis</li>
+            <li>Mendukung pertumbuhan yang adil</li>
+        </ul>
+
+        <h3>5.3 Mengapa Sistem Berbagi Risiko Lebih Stabil?</h3>
+        <ul>
+            <li><strong>Tidak menciptakan uang dari udara.</strong> Pembiayaan harus didasarkan pada aset riil.</li>
+            <li><strong>Menyelaraskan insentif.</strong> Pemberi modal dan pengusaha berbagi keuntungan dan kerugian.</li>
+            <li><strong>Mengurangi spekulasi.</strong> Keuntungan berasal dari produksi riil.</li>
+            <li><strong>Meningkatkan keadilan.</strong> Beban dan keuntungan dibagi secara adil.</li>
+        </ul>
+
+        <h3>5.4 Bacaan Penantang: Reinhart dan Rogoff</h3>
+        <p>Reinhart dan Rogoff dalam <em>This Time Is Different: Eight Centuries of Financial Folly</em> (2009) menunjukkan krisis utang bukan fenomena unik sistem fiat modern — ia pola berulang sepanjang sejarah. Krisis juga terjadi pada sistem moneter berbasis logam.</p>
+        <p>Implikasi: Solusi tidak cukup hanya dengan mengganti sistem moneter. Diperlukan transformasi yang lebih mendalam: perubahan orientasi dari akumulasi ke distribusi, dari konsumerisme ke qana'ah. Sistem apa pun — fiat, logam, atau berbagi risiko — akan rentan jika manusia yang mengoperasikannya masih dikuasai oleh keserakahan.</p>
+
+        <h3>5.5 Analisis Kritis: Apa Artinya Ini bagi Ekonomi Islam?</h3>
+        <p>Jika Reinhart dan Rogoff benar bahwa krisis adalah pola berulang, maka ekonomi Islam tidak bisa hanya menjadi alternatif teknis. Ia harus menjadi alternatif moral dan spiritual. Sistem berbagi risiko yang diusulkan Mirakhor hanya akan berfungsi jika ada transformasi individu — qana'ah, muhasabah — yang mendukungnya.</p>
+        <div class="box-note">
+            Sistem moneter yang baik membutuhkan manusia yang baik. Dan manusia yang baik membutuhkan sistem yang mendukung. Ini adalah hubungan dialektis, bukan hubungan satu arah.
+        </div>
+
+        <h3>5.6 Mengapa Krisis Utang Berulang?</h3>
+        <ul>
+            <li><strong>Present bias:</strong> Manusia cenderung mengabaikan risiko jangka panjang.</li>
+            <li><strong>Herd behavior:</strong> Manusia cenderung mengikuti arus.</li>
+            <li><strong>Optimism bias:</strong> Manusia cenderung merasa kebal terhadap krisis.</li>
+            <li><strong>Insentif sistemik:</strong> Sistem memberi insentif untuk berutang.</li>
+        </ul>
+        <p>Implikasi: Krisis utang bukan hanya masalah teknis. Ia adalah masalah moral dan spiritual. Ia berakar pada kelemahan manusia.</p>
+    </div>
+
+    <!-- ==================== HALAMAN 7: BAB 6 ==================== -->
+    <div class="page" id="page7">
+        <h1>BAB 6</h1>
+        <h2>TAHAP 3: GEOPOLITIK ASIA &amp; DE-DOLARISASI — PERLAWANAN DAN KETERBATASAN</h2>
+
+        <h3>6.1 Agenda De-Dolarisasi BRICS</h3>
+        <p>BRICS telah secara aktif mencari agenda de-dolarisasi dan reformasi sistem moneter dan keuangan internasional, dengan tujuan mengurangi ketergantungan pada dolar AS dan membangun sistem pembayaran dan penyelesaian alternatif.</p>
+        <p>Penelitian terbaru dari IPEA (2025) oleh Araripe, Peruffo, dan Cunha memberikan gambaran yang lebih nuansa. Mereka menyimpulkan bahwa pendekatan Brasil selama presidensi BRICS 2025 telah seimbang, berusaha memperluas otonomi strategisnya sambil bertindak dalam keseimbangan antara dua kutub kekuatan yang bertentangan: China dan Amerika Serikat.</p>
+        <p>Meskipun BRICS secara bertahap telah membangun arsitektur alternatif, kelompok ini menghadapi tantangan karena: kompleksitas koordinasi sistem keuangan yang berbeda; keterbatasan institusional; tekanan geopolitik.</p>
+
+        <h3>6.2 Infleksi Pragmatis</h3>
+        <p>Kesimpulan penting dari studi ini: dalam jangka pendek dan menengah, prioritas strategis BRICS — terutama di bawah presidensi Brasil pada 2025 — terkonsentrasi pada pendalaman studi tentang pembayaran dalam mata uang lokal, tanpa memprediksi penciptaan mata uang bersama secara langsung.</p>
+        <p>Ini merupakan infleksi pragmatis dibandingkan dengan KTT Rusia 2024. Analisis dari Lowy Institute (2025) menambahkan dimensi lain: setelah ancaman Trump untuk menerapkan tarif 100% pada anggota BRICS yang mempertimbangkan mata uang alternatif dan de-dolarisasi pada Januari 2025, agenda ini menghadapi tekanan eksternal yang signifikan.</p>
+
+        <h3>6.3 Mengapa De-Dolarisasi Sulit?</h3>
+        <ul>
+            <li><strong>Jaringan efek:</strong> Dolar digunakan oleh begitu banyak orang sehingga menggunakannya menjadi lebih efisien.</li>
+            <li><strong>Kedalaman pasar:</strong> Pasar keuangan AS adalah yang paling dalam dan likuid di dunia.</li>
+            <li><strong>Kekuatan militer:</strong> Dolar didukung oleh kekuatan militer AS.</li>
+            <li><strong>Kebiasaan institusional:</strong> Banyak institusi telah menggunakan dolar selama puluhan tahun.</li>
+        </ul>
+        <p>Implikasi: De-dolarisasi bukan hanya masalah teknis. Ia adalah masalah struktural yang berakar pada relasi kekuasaan global.</p>
+
+        <h3>6.4 Catatan Penting: BRICS Bukan Gerakan Islam</h3>
+        <p>BRICS bukan entitas monolitik dan tidak otomatis anti-riba. Ini perlawanan geopolitik, bukan perlawanan ideologis Islam. Ketergantungan struktural pada dolar tetap ada, ketegangan internal menghambat konsensus, dan resistensi kekuatan mapan membatasi jangkauan.</p>
+        <p>Mengapa tahap ini penting? Karena banyak umat Islam menarik harapan pada BRICS sebagai alternatif sistem moneter global. Tanpa membaca keterbatasannya, harapan ini bisa berubah menjadi kekecewaan.</p>
+
+        <h3>6.5 Analisis Kritis: Siapa yang Diuntungkan dari De-Dolarisasi?</h3>
+        <p><strong>Yang diuntungkan:</strong> China (mengurangi ketergantungan pada dolar), Rusia (mengurangi dampak sanksi AS), negara-negara penghasil komoditas, negara-negara yang ingin mengurangi pengaruh AS.</p>
+        <p><strong>Yang dirugikan:</strong> Amerika Serikat (kehilangan kemampuan membiayai defisit dengan biaya rendah), negara-negara yang bergantung pada dolar, investor yang memiliki aset dolar.</p>
+        <p>Analisis ini menunjukkan bahwa de-dolarisasi bukanlah tentang keadilan global, melainkan tentang pergeseran kekuasaan.</p>
+
+        <h3>6.6 Apa yang Bisa Dipelajari?</h3>
+        <ul>
+            <li>Perubahan sistem moneter global tidak bisa dilakukan secara revolusioner.</li>
+            <li>Perubahan sistem moneter global tidak identik dengan perubahan ideologis.</li>
+            <li>Perubahan sistem moneter global harus disertai dengan perubahan dari bawah.</li>
+            <li>Perubahan sistem moneter global membutuhkan koalisi yang lebih luas.</li>
+        </ul>
+    </div>
+
+    <!-- ==================== HALAMAN 8: BAB 7 ==================== -->
+    <div class="page" id="page8">
+        <h1>BAB 7</h1>
+        <h2>TAHAP 4: SEJARAH PERADABAN ISLAM — BUKTI HISTORIS DAN PELAJARAN</h2>
+
+        <h3>7.1 Teori Peradaban Ibnu Khaldun</h3>
+        <p>Ibnu Khaldun, seorang ilmuwan dan pemikir besar abad ke-14, dalam karya monumentalnya <em>Muqaddimah</em>, mengemukakan teori peradaban yang mengintegrasikan konsep-konsep kekuasaan, ekonomi, moralitas, dan solidaritas sosial ('asabiyyah).</p>
+
+        <h4>Fase Perkembangan Peradaban:</h4>
+        <ol>
+            <li><strong>Sukses atau Konsolidasi:</strong> Otoritas negara didukung oleh solidaritas kelompok. Nilai-nilai kesederhanaan, keberanian, dan kerja sama dijunjung tinggi.</li>
+            <li><strong>Sejahtera:</strong> Kedaulatan telah dinikmati. Masyarakat mulai menikmati kemewahan. Nilai-nilai materialisme mulai menggantikan nilai-nilai spiritual.</li>
+            <li><strong>Kepuasan Hati:</strong> Masyarakat mencapai puncak kemakmuran. Namun, kemewahan telah melemahkan solidaritas. Masyarakat mulai terpecah.</li>
+            <li><strong>Kemunduran:</strong> Solidaritas telah hilang. Masyarakat tidak mampu menghadapi tantangan eksternal. Peradaban runtuh.</li>
+        </ol>
+
+        <h3>7.2 Mengapa Kemewahan Melemahkan Solidaritas?</h3>
+        <ul>
+            <li><strong>Ketergantungan:</strong> Orang yang terbiasa dengan kemewahan menjadi tergantung pada kemewahan itu.</li>
+            <li><strong>Ketimpangan:</strong> Tidak semua orang memiliki akses yang sama terhadap kemewahan.</li>
+            <li><strong>Kompetisi:</strong> Ketika sumber daya terbatas, orang bersaing untuk mendapatkannya.</li>
+            <li><strong>Kelalaian:</strong> Orang yang sibuk mengejar kemewahan tidak punya waktu untuk hal-hal yang lebih penting.</li>
+        </ul>
+        <p>Implikasi: Kemewahan bukan hanya masalah ekonomi. Ia adalah masalah moral dan spiritual. Ia melemahkan ikatan sosial dan menggantikannya dengan ikatan material.</p>
+
+        <h3>7.3 Kemunduran Dunia Muslim Menurut Chapra</h3>
+        <p>M. Umer Chapra (2008) melengkapi gambaran ini dengan menunjukkan bahwa kemunduran dunia Muslim bukan karena ajaran Islam, melainkan karena umat Muslim meninggalkan prinsip-prinsip maqasid al-shariah dalam tata kelola, ekonomi, dan pendidikan.</p>
+        <p>Chapra menghubungkan tatanan moral, otoritas politik, modal manusia, dan produktivitas ekonomi ke dalam model siklus kemakmuran dan kemunduran masyarakat. Pembangunan berkelanjutan, dari perspektif ini, bergantung pada 'adl (keadilan).</p>
+
+        <h3>7.4 Pelajaran Konkret</h3>
+        <ul>
+            <li>Solidaritas sosial ('asabiyyah) bukan hanya ikatan primordial, melainkan energi kolektif yang memungkinkan pembangunan.</li>
+            <li>Kemewahan dan konsumerisme melemahkan solidaritas.</li>
+            <li>Keadilan adalah prasyarat keberlanjutan.</li>
+            <li>Kemunduran bukan takdir; ia adalah akibat dari pilihan kolektif.</li>
+        </ul>
+
+        <h3>7.5 Analisis Kritis: Apakah Siklus Ibnu Khaldun Deterministik?</h3>
+        <p>Ibnu Khaldun sering dibaca sebagai determinis — bahwa peradaban pasti mengalami siklus, dan kemunduran tidak terhindarkan. Tetapi bacaan ini terlalu simplistik. Ibnu Khaldun tidak mengatakan bahwa kemunduran tidak terhindarkan; ia mengatakan bahwa kemunduran adalah konsekuensi dari pilihan.</p>
+        <p>Solidaritas melemah karena pilihan; kemewahan menyebar karena pilihan; keadilan ditinggalkan karena pilihan. Jika demikian, maka kemunduran dapat dihindari — dengan membuat pilihan yang berbeda. Ini adalah pesan yang optimistis: kita tidak terperangkap dalam siklus; kita memiliki agensi.</p>
+
+        <h3>7.6 Mengapa Umat Islam Mundur?</h3>
+        <ul>
+            <li><strong>Kolonialisme:</strong> Penjajahan Eropa selama berabad-abad menghancurkan struktur politik, ekonomi, dan sosial dunia Muslim.</li>
+            <li><strong>Fragmentasi politik:</strong> Dunia Muslim terpecah menjadi negara-negara bangsa yang bersaing satu sama lain.</li>
+            <li><strong>Kemunduran intelektual:</strong> Ijtihad digantikan oleh taqlid; kreativitas digantikan oleh repetisi.</li>
+            <li><strong>Kehilangan orientasi spiritual:</strong> Umat Islam terjebak dalam formalisme dan ritualisme, tanpa menghayati makna yang lebih dalam.</li>
+        </ul>
+        <p>Implikasi: Kemunduran umat Islam bukan karena Islam, tetapi karena umat Islam meninggalkan prinsip-prinsip Islam. Ini adalah pesan yang penuh harapan: jika kita kembali kepada prinsip-prinsip itu, kita bisa bangkit kembali.</p>
+    </div>
+
+    <!-- ==================== HALAMAN 9: BAB 8 ==================== -->
+    <div class="page" id="page9">
+        <h1>BAB 8</h1>
+        <h2>TAHAP 5: PERBANDINGAN AGAMA &amp; MILLAH IBRAHIM — TITIK TEMU UNIVERSAL</h2>
+
+        <h3>8.1 Tiga Titik Temu Millah Ibrahim</h3>
+        <p>Studi tentang millah Ibrahim menemukan tiga titik temu yang dapat mengarah pada perdamaian dalam beragama:</p>
+        <ul>
+            <li><strong>Kesamaan asal-usul agama:</strong> Yahudi, Kristen, dan Islam bertemu dalam satu figur sentral: Ibrahim. Ia adalah bapak monoteisme, yang menghancurkan berhala dan menegakkan tauhid.</li>
+            <li><strong>Harmoni teologi dan kesinambungan wahyu:</strong> Ketiga agama mengakui satu Tuhan yang sama, meskipun dengan penamaan dan pemahaman yang berbeda.</li>
+            <li><strong>Kebersamaan syariah:</strong> Ada nilai-nilai etis yang sama: keadilan, kasih sayang, kejujuran, larangan mencuri, larangan membunuh, penghormatan kepada orang tua.</li>
+        </ul>
+        <p>Penelitian ini merupakan studi pustaka dengan pendekatan teori pluralisme dan esoterisme-eksoterisme, yang menemukan bahwa dari millah Ibrahim dapat ditemukan <em>kalimatun sawa'</em>, titik temu, dan common platform agama Ibrahim.</p>
+
+        <h3>8.2 Rahmatan lil 'Alamin dalam Tradisi NU</h3>
+        <p>Konsep rahmatan lil 'alamin dalam tradisi Nahdlatul Ulama, misalnya, bukan sekadar klaim teologis, melainkan bentuk tanggung jawab moral untuk menjaga martabat manusia. Dalam tradisi NU, keberagamaan tidak diukur dari ketegasan identitas, melainkan bagaimana agama mampu melindungi kehidupan, mengurangi penderitaan, dan membangun keadilan sosial.</p>
+        <p>Kerangka ukhuwah yang dikembangkan NU:</p>
+        <ul>
+            <li><strong>Ukhuwah Islamiyah:</strong> persaudaraan antar sesama Muslim</li>
+            <li><strong>Ukhuwah Wathaniyah:</strong> persaudaraan sebangsa</li>
+            <li><strong>Ukhuwah Basyariyah:</strong> persaudaraan sesama manusia</li>
+        </ul>
+        <p>Ukhuwah basyariyah menegaskan bahwa martabat manusia tidak bergantung pada perbedaan agama, etnis, atau kewarganegaraan.</p>
+
+        <h3>8.3 Kritik terhadap Studi Perbandingan Agama</h3>
+        <p>Namun, ada kritik terhadap studi perbandingan agama yang mengasumsikan semua agama sebagai refleksi dari kebenaran universal yang satu. Jika dilakukan tanpa praanggapan yang jelas, hasilnya berpotensi sinkretistik (Anis Malik Thoha, dalam <em>Jurnal Pelita Zaman</em>).</p>
+        <p>Kritik ini penting karena dua alasan:</p>
+        <ul>
+            <li><strong>Perbedaan teologis tidak bisa diabaikan.</strong> Islam, Kristen, dan Yahudi memiliki perbedaan fundamental tentang hakikat Tuhan, tentang Yesus, tentang wahyu.</li>
+            <li><strong>Dialog bukan berarti mengorbankan keyakinan.</strong> Dialog yang benar adalah tentang memahami yang lain tanpa harus setuju.</li>
+        </ul>
+
+        <h3>8.4 Contoh Praktik Dialog Antariman</h3>
+        <p>NU melalui Lakpesdam dan PBNU telah mempraktikkan "dialog kehidupan" — kerja sama lintas iman dalam merespons bencana, kesehatan, dan pendidikan. Muhammadiyah melalui Muhammadiyah Aid juga bekerja lintas agama dalam kemanusiaan. Ini adalah bentuk rahmatan lil 'alamin yang tidak berhenti pada slogan.</p>
+        <p>Mengapa dialog kehidupan lebih efektif daripada dialog teologis? Karena dialog teologis sering kali terjebak dalam perdebatan tentang siapa yang benar, sedangkan dialog kehidupan fokus pada kerja sama untuk mengatasi masalah bersama.</p>
+
+        <h3>8.5 Analisis Kritis: Apakah Dialog Antariman Mengancam Akidah?</h3>
+        <p>Kekhawatiran tentang dialog antariman sering kali berakar pada asumsi bahwa dialog berarti mengorbankan keyakinan. Tetapi dialog yang benar bukanlah tentang mengorbankan keyakinan; ia adalah tentang memahami yang lain tanpa harus setuju. Dialog bukan sinkretisme. Ia adalah upaya untuk hidup bersama dalam perbedaan.</p>
+        <p>Rahmatan lil 'alamin, dalam pengertian ini, bukan tentang menghapus perbedaan, melainkan tentang mengelola perbedaan dengan kasih sayang.</p>
+
+        <h3>8.6 Bagaimana Mengelola Perbedaan dengan Kasih Sayang?</h3>
+        <ol>
+            <li><strong>Pisahkan orang dari pendapatnya.</strong> Kritiklah gagasan, bukan pribadi.</li>
+            <li><strong>Dengarkan untuk memahami, bukan untuk menjawab.</strong></li>
+            <li><strong>Akui keterbatasan diri.</strong> Kita tidak memiliki semua jawaban.</li>
+            <li><strong>Cari titik temu, bukan titik pisah.</strong></li>
+            <li><strong>Jaga adab.</strong> Perbedaan pendapat tidak boleh menghilangkan rasa hormat.</li>
+        </ol>
+    </div>
+
+    <!-- ==================== HALAMAN 10: BAB 9 ==================== -->
+    <div class="page" id="page10">
+        <h1>BAB 9</h1>
+        <h2>TAHAP 6: APLIKASI &amp; GERAKAN — DAKWAH DIGITAL DAN KETERBATASANNYA</h2>
+
+        <h3>9.1 Transformasi Dakwah Digital</h3>
+        <p>Perkembangan teknologi informasi telah mendorong transformasi dakwah Islam dari media konvensional menuju media sosial digital. Dengan penetrasi internet yang terus meluas di Indonesia, dakwah digital menawarkan jangkauan yang luas.</p>
+        <p>Muhammadiyah, misalnya, telah membuka Akademi Dai Digital pada Juni 2025 dengan tema "Dakwah Transformatif di Era Digital". Ketua PP Muhammadiyah Kiai Saad Ibrahim menekankan bahwa dai harus memiliki: landasan teologis yang kuat, wawasan keilmuan yang luas, dan keterampilan teknologi yang mumpuni. Bukan untuk menjadi pengikut tren, tetapi untuk mengarahkan arus zaman kepada nilai-nilai Islam yang mencerahkan.</p>
+
+        <h3>9.2 Logika Algoritma dan McDonaldisasi Agama</h3>
+        <p>Namun, logika algoritma media sosial yang berorientasi pada viralitas dan keterlibatan pengguna mendorong: penyederhanaan pesan keagamaan; munculnya budaya religius instan; fenomena FOMO religius yang lebih mengutamakan tampilan daripada pengamalan.</p>
+        <p>Hasil kajian menunjukkan bahwa dakwah digital cenderung hanya memengaruhi aspek kognitif tanpa diikuti perubahan sikap dan perilaku yang nyata.</p>
+        <p>Kiai Saad Ibrahim memperingatkan:</p>
+        <div class="box-note">
+            "Kalau dakwah kita hanya mengejar popularitas atau follower, maka kita kehilangan arah. Tapi jika dakwah kita dibangun atas dasar tauhid dan ilmu, maka itu akan menjadi kekuatan perubahan yang sejati."
+        </div>
+        <p>Konsep yang tepat untuk menggambarkan fenomena ini adalah <strong>McDonaldisasi Agama</strong> (Ritzer, diadaptasi untuk konteks dakwah digital): ajaran yang mendalam direduksi menjadi konten visual instan. Efisiensi, kalkulabilitas, prediktabilitas, dan kontrol menggantikan kedalaman, konteks, dan pengamalan.</p>
+
+        <h3>9.3 Mengapa Dakwah Digital Sering Gagal?</h3>
+        <p>Dakwah digital sering gagal karena ia terjebak dalam logika yang sama dengan media sosial: mengejar engagement. Dalam logika ini, keberhasilan diukur dari jumlah likes, shares, dan followers — bukan dari perubahan perilaku.</p>
+        <p>Untuk keluar dari jebakan ini, dakwah digital harus:</p>
+        <ul>
+            <li><strong>Mengubah metrik keberhasilan:</strong> dari viralitas ke transformasi.</li>
+            <li><strong>Mengembangkan konten yang mendalam:</strong> bukan hanya menyentuh emosi, tetapi juga mengubah cara berpikir.</li>
+            <li><strong>Membangun komunitas:</strong> bukan hanya audiens pasif, tetapi komunitas yang saling menguatkan.</li>
+            <li><strong>Mengintegrasikan online dan offline:</strong> dakwah digital harus terhubung dengan praktik nyata.</li>
+        </ul>
+
+        <h3>9.4 Studi Kasus</h3>
+        <p>Muhammadiyah membuka Akademi Dai Digital. NU melalui NU Online dan Islam Nusantara berusaha menjaga kedalaman tradisi. Komunitas digital seperti Shift dan Kajian Ustadz Hanan Attaki menunjukkan daya tarik dakwah digital, tetapi juga risiko simplifikasi. Dakwah transformatif harus mampu menggunakan teknologi tanpa dikuasai logika algoritma yang memecah belah.</p>
+
+        <h3>9.5 Mengapa Dakwah Digital Bisa Memecah Belah?</h3>
+        <ul>
+            <li><strong>Algoritma memperkuat bias konfirmasi.</strong> Pengguna hanya melihat konten yang sesuai dengan keyakinan mereka.</li>
+            <li><strong>Algoritma mendorong konten yang emosional dan kontroversial.</strong> Konten yang tenang dan seimbang kurang mendapat engagement.</li>
+            <li><strong>Dakwah digital sering kehilangan konteks.</strong> Nuansa hilang. Kompleksitas diabaikan.</li>
+            <li><strong>Dakwah digital sering tidak melibatkan komunitas.</strong> Audiens menjadi konsumen pasif.</li>
+        </ul>
+
+        <h3>9.6 Bagaimana Dakwah Transformatif Seharusnya?</h3>
+        <ul>
+            <li><strong>Berbasis komunitas.</strong> Dakwah bukan hanya tentang menyampaikan pesan, tetapi tentang membangun komunitas.</li>
+            <li><strong>Mengintegrasikan ilmu dan amal.</strong> Dakwah harus mengubah perilaku, bukan hanya kognisi.</li>
+            <li><strong>Menghormati keragaman.</strong> Dakwah tidak boleh memaksakan satu penafsiran sebagai satu-satunya yang benar.</li>
+            <li><strong>Menjaga adab.</strong> Dakwah harus dilakukan dengan kasih sayang, bukan dengan kemarahan.</li>
+            <li><strong>Menggunakan teknologi dengan bijak.</strong> Teknologi untuk memperkuat komunitas, bukan untuk memecah belah.</li>
+        </ul>
+    </div>
+
+    <!-- ==================== HALAMAN 11: BAB 10 ==================== -->
+    <div class="page" id="page11">
+        <h1>BAB 10</h1>
+        <h2>TAHAP 7: IMPLEMENTASI KEBIJAKAN DAN GERAKAN SOSIAL — DARI NILAI KE AKSI</h2>
+
+        <h3>10.1 Mengapa Tahap Ini Penting?</h3>
+        <p>Tujuh tahap sebelumnya bergerak dari fondasi teologis menuju mekanisme struktural, dan dari sejarah menuju gerakan kontemporer. Namun, ada satu tahap yang sering terlewat: bagaimana nilai-nilai yang telah diidentifikasi diterjemahkan menjadi kebijakan publik dan gerakan sosial yang konkret?</p>
+        <p>Rahmatan lil 'alamin bukan slogan. Ia membutuhkan infrastruktur kelembagaan. Dalam konteks Indonesia, ada beberapa arena implementasi yang dapat diidentifikasi.</p>
+
+        <h3>10.2 Pendidikan</h3>
+        <p>Kurikulum pendidikan Islam perlu mengintegrasikan tiga hal yang selama ini terpisah: ilmu-ilmu keislaman, ilmu-ilmu sosial, dan keterampilan praktis. Fragmentasi pengetahuan dimulai dari bangku sekolah, di mana ekonomi diajarkan tanpa etika, sains tanpa spiritualitas, dan agama tanpa relevansi sosial.</p>
+        <p>Muhammadiyah dan NU memiliki jaringan sekolah dan pesantren yang luas — ini adalah laboratorium untuk menguji model integrasi.</p>
+        <p>Bagaimana model integrasi ini seharusnya?</p>
+        <ul>
+            <li><strong>Pendekatan tematik, bukan mata pelajaran terpisah.</strong> Ajarkan tentang keadilan ekonomi, tentang bagaimana sistem ekonomi mempengaruhi kehidupan manusia.</li>
+            <li><strong>Praktik, bukan hanya teori.</strong> Siswa mempraktikkan pengelolaan zakat di komunitas mereka.</li>
+            <li><strong>Refleksi, bukan hanya informasi.</strong> Siswa merefleksikan bagaimana ajaran itu relevan dengan kehidupan mereka.</li>
+        </ul>
+
+        <h3>10.3 Ekonomi Komunitas</h3>
+        <p>Model baitul mal wat tamwil (BMT) dan koperasi syariah menunjukkan bahwa prinsip berbagi risiko dapat diimplementasikan dalam skala komunitas, bukan hanya dalam teori makro. Mirakhor (2025) menunjukkan bahwa arsitektur moneter berbagi risiko memiliki fondasi yang kokoh. Tetapi fondasi ini hanya bermakna jika ada gerakan dari bawah yang membangunnya.</p>
+        <p>Cara kerja ekonomi komunitas:</p>
+        <ul>
+            <li>Anggota mengumpulkan modal bersama. Modal ini digunakan untuk membiayai usaha anggota, tanpa bunga.</li>
+            <li>Keuntungan dan kerugian dibagi secara adil.</li>
+            <li>Keputusan diambil secara musyawarah.</li>
+            <li>Ada pendampingan dan pendidikan.</li>
+        </ul>
+
+        <h3>10.4 Kebijakan Publik</h3>
+        <p>Negara memiliki peran dalam menciptakan kerangka yang memungkinkan ekonomi berkeadilan. Zakat, misalnya, bukan hanya ibadah individual — ia adalah instrumen redistribusi. Pengelolaan zakat yang profesional dan transparan dapat menjadi mekanisme yang mengurangi ketimpangan tanpa harus menunggu perubahan sistem global.</p>
+        <p>Chapra (2008) menekankan bahwa kebijakan pembangunan harus berakar pada maqasid al-shariah, bukan pada model impor yang mengabaikan dimensi moral dan spiritual.</p>
+        <ul>
+            <li><strong>Berbasis maqasid al-shariah.</strong> Kebijakan harus bertujuan melindungi agama, jiwa, akal, keturunan, dan harta.</li>
+            <li><strong>Partisipatif.</strong> Kebijakan harus melibatkan masyarakat dalam perumusannya.</li>
+            <li><strong>Transparan.</strong> Kebijakan harus terbuka untuk dievaluasi dan dikritik.</li>
+            <li><strong>Berorientasi jangka panjang.</strong> Kebijakan harus mempertimbangkan dampak jangka panjang.</li>
+        </ul>
+
+        <h3>10.5 Teknologi</h3>
+        <p>Teknologi bukan netral. Ia membawa nilai-nilai dari mereka yang mengembangkannya. Literasi digital, karena itu, bukan hanya keterampilan teknis — ia adalah keterampilan etis. Dakwah digital yang transformatif harus mampu menggunakan teknologi tanpa dikuasai logika algoritma yang memecah belah.</p>
+        <ul>
+            <li><strong>Memahami cara kerja algoritma.</strong> Pengguna harus tahu bahwa algoritma tidak netral.</li>
+            <li><strong>Mengembangkan keterampilan verifikasi.</strong> Pengguna harus bisa memeriksa kebenaran informasi.</li>
+            <li><strong>Mengembangkan kesadaran etis.</strong> Pengguna harus menyadari dampak dari tindakan digital mereka.</li>
+            <li><strong>Membangun komunitas digital yang sehat.</strong> Pengguna harus aktif membangun ruang digital yang mendukung dialog.</li>
+        </ul>
+
+        <h3>10.6 Dialog Lintas Iman</h3>
+        <p>Ukhuwah basyariyah bukan hanya konsep. NU telah mempraktikkan "dialog kehidupan" — kerja sama lintas iman dalam merespons persoalan kemanusiaan. Model ini perlu diperluas dan dilembagakan, bukan hanya bergantung pada inisiatif tokoh individu.</p>
+
+        <h3>10.7 Bagaimana Mengukur Keberhasilan?</h3>
+        <ul>
+            <li><strong>Indikator pendidikan:</strong> peningkatan pemahaman siswa tentang keterkaitan antara ilmu, etika, dan spiritualitas.</li>
+            <li><strong>Indikator ekonomi:</strong> peningkatan jumlah komunitas yang mengelola BMT dan koperasi syariah.</li>
+            <li><strong>Indikator kebijakan:</strong> peningkatan alokasi anggaran untuk program redistribusi.</li>
+            <li><strong>Indikator teknologi:</strong> penurunan jumlah ujaran kebencian di media sosial.</li>
+            <li><strong>Indikator dialog:</strong> peningkatan jumlah proyek kerja sama lintas iman.</li>
+        </ul>
+    </div>
+
+    <!-- ==================== HALAMAN 12: BAB 11 ==================== -->
+    <div class="page" id="page12">
+        <h1>BAB 11</h1>
+        <h2>HASIL DAN PEMBAHASAN</h2>
+
+        <h3>11.1 Fragmentasi Pengetahuan sebagai Akar Krisis</h3>
+        <p>Temuan utama dari sintesis literatur adalah bahwa fragmentasi pengetahuan bukan sekadar masalah akademis, melainkan akar dari krisis multidimensi. Ekonomi, teologi, psikologi, dan geopolitik dibahas di ruangnya masing-masing, tanpa ada yang mencoba merangkainya menjadi satu gambar utuh.</p>
+        <p>Akibatnya, orang awam melihat krisis sebagai sesuatu yang datang entah dari mana — rumit, tidak bisa dipahami, tidak bisa dilawan. Padahal semuanya nyambung:</p>
+        <ol>
+            <li>Manusia diciptakan lemah</li>
+            <li>Tergoda sistem yang mengeksploitasi kelemahannya</li>
+            <li>Lahir ketimpangan</li>
+            <li>Lahir utang dan konflik dan perpecahan</li>
+            <li>Muncul fanatisme dan matinya hati</li>
+        </ol>
+        <p>Analisis ini konsisten dengan kritik Cadmus (2025) bahwa evolusi teknologi telah melampaui evolusi moral. Kita memiliki kapasitas teknis untuk mengelola ekonomi global, tetapi kita tidak memiliki kapasitas moral untuk memastikan hasilnya adil.</p>
+
+        <h3>11.2 Qana'ah sebagai Mekanisme Korektif</h3>
+        <p>Penelitian menunjukkan bahwa qana'ah — sikap merasa cukup — berfungsi sebagai mekanisme korektif terhadap budaya konsumtif. Rekonstruksi konsep qana'ah Al-Ghazali menunjukkan bahwa ia bukan hanya nilai spiritual, tetapi juga mekanisme etis dan psikologis dalam merespons budaya konsumen modern.</p>
+        <p>Korelasi negatif yang sangat kuat (r = -0,886) antara qana'ah dan perilaku konsumtif pada mahasiswi pengguna online shopping di UIN Walisongo (n = 129) menunjukkan bahwa internalisasi nilai spiritual dapat menjadi penyangga terhadap tekanan sistem ekonomi yang eksploitatif.</p>
+        <p>Qana'ah, dengan kata lain, bukan sikap pasif. Ia adalah bentuk perlawanan halus terhadap narasi bahwa kebahagiaan dapat dibeli.</p>
+        <p>Bagaimana qana'ah bekerja secara psikologis?</p>
+        <ul>
+            <li><strong>Mengubah sumber kebahagiaan.</strong> Dari konsumsi ke hubungan dengan Tuhan dan sesama.</li>
+            <li><strong>Mengurangi kecemasan.</strong> Ketika merasa cukup, seseorang tidak lagi cemas tentang apa yang tidak dimilikinya.</li>
+            <li><strong>Meningkatkan rasa syukur.</strong></li>
+            <li><strong>Memperkuat kendali diri.</strong></li>
+        </ul>
+
+        <h3>11.3 Rahmatan lil 'Alamin sebagai Praksis Sosial</h3>
+        <p>Konsep rahmatan lil 'alamin dapat menjadi fondasi penguatan solidaritas sosial dengan menumbuhkan empati, kepedulian, dan tanggung jawab sosial antar-individu. Namun, konsep ini sering berhenti sebagai slogan. Ia perlu diterjemahkan menjadi praktik konkret dalam tiga arena:</p>
+        <ul>
+            <li><strong>Menghadapi yang berbeda:</strong> mendengarkan dengan sungguh-sungguh, memahami bukan menunggu giliran bicara.</li>
+            <li><strong>Mengelola konflik:</strong> memisahkan orang dari pendapatnya, mengkritik gagasan tanpa menyerang pribadi.</li>
+            <li><strong>Menghadapi kekuasaan:</strong> melawan dengan cara yang benar, membela yang lemah tanpa fanatisme.</li>
+        </ul>
+
+        <h3>11.4 Integrasi: Dari Fragmentasi Menuju Kekeluargaan</h3>
+        <p>Sintesis dari tujuh tahap menunjukkan bahwa respons terhadap fragmentasi harus sama berlapisnya dengan krisisnya. Setiap dimensi krisis memiliki titik masuk yang berbeda, tetapi semuanya bermuara pada satu tujuan: <strong>kekeluargaan universal</strong>.</p>
+
+        <h4>Dimensi Teologis</h4>
+        <p>Akar masalah: Kelemahan manusia, lupa fitrah. Respons Islam: Muhasabah, tazkiyah. Indikator: Kesadaran diri meningkat. Tantangan: Individualisme spiritual.</p>
+
+        <h4>Dimensi Ekonomi</h4>
+        <p>Akar masalah: Riba, ketimpangan, konsumerisme. Respons Islam: Qana'ah, zakat, ekonomi syariah. Indikator: Konsumsi etis, redistribusi. Tantangan: Sistem global tidak mendukung.</p>
+
+        <h4>Dimensi Sosial</h4>
+        <p>Akar masalah: Individualisme, erosi kekeluargaan. Respons Islam: Ukhuwah, rahmatan lil 'alamin. Indikator: Kesepian menurun, solidaritas naik. Tantangan: Ruang publik terfragmentasi.</p>
+
+        <h4>Dimensi Epistemologis</h4>
+        <p>Akar masalah: Fragmentasi pengetahuan. Respons Islam: Integrasi ilmu, refleksivitas. Indikator: Dialog lintas disiplin. Tantangan: Institutional silos.</p>
+
+        <h4>Dimensi Digital</h4>
+        <p>Akar masalah: Polarisasi, disinformasi. Respons Islam: Dakwah transformatif, literasi digital. Indikator: Kualitas percakapan publik. Tantangan: Logika algoritma viralitas.</p>
+
+        <h4>Dimensi Politik</h4>
+        <p>Akar masalah: Hegemoni, ketidakadilan global. Respons Islam: Keadilan ('adl), syura. Indikator: Kebijakan inklusif. Tantangan: Realpolitik kekuasaan.</p>
+
+        <h3>11.5 Perlawanan dan Keterbatasannya</h3>
+        <p>Analisis terhadap BRICS dan de-dolarisasi menunjukkan bahwa perlawanan struktural terhadap sistem moneter global memiliki keterbatasan. Penelitian IPEA (2025) menegaskan bahwa ketergantungan struktural pada dolar tetap ada, ketegangan internal menghambat konsensus, dan resistensi kekuatan mapan membatasi jangkauan.</p>
+        <p>Ini berarti perlawanan geopolitik tidak identik dengan perlawanan ideologis. BRICS bukanlah gerakan Islam, dan keanggotaannya tidak menjamin orientasi anti-riba. Temuan ini penting sebagai pengingat bahwa perubahan sistem tidak cukup dilakukan dari atas. Ia harus disertai transformasi dari bawah: qana'ah, muhasabah, dan penguatan komunitas lokal.</p>
+
+        <h3>11.6 Kontribusi Teoretis</h3>
+        <p>Kontribusi utama tulisan ini adalah kerangka analitis yang menyatukan tiga level:</p>
+        <ul>
+            <li><strong>Level makro:</strong> Sistem moneter global, geopolitik, ketimpangan struktural</li>
+            <li><strong>Level meso:</strong> Institusi sosial, keluarga, komunitas, dakwah</li>
+            <li><strong>Level mikro:</strong> Individu, qana'ah, muhasabah, fitrah</li>
+        </ul>
+        <p>Kerangka ini memungkinkan analisis krisis yang tidak terjebak pada satu level saja. Krisis ekonomi tidak bisa dijelaskan hanya dari level makro; ia memiliki akar di level mikro (konsumerisme) dan meso (erosi komunitas). Sebaliknya, perubahan mikro tidak cukup tanpa perubahan makro.</p>
+    </div>
+
+    <!-- ==================== HALAMAN 13: BAB 12 ==================== -->
+    <div class="page" id="page13">
+        <h1>BAB 12</h1>
+        <h2>KESIMPULAN</h2>
+
+        <h3>12.1 Mengapa Krisis Tampak Rumit?</h3>
+        <p>Tulisan ini berangkat dari satu pertanyaan sederhana: mengapa krisis kontemporer tampak begitu rumit? Jawabannya bukan karena krisis itu sendiri rumit, melainkan karena kita memahaminya secara terfragmentasi. Ekonomi dipisahkan dari etika, teologi dipisahkan dari realitas, psikologi dipisahkan dari spiritualitas.</p>
+        <p>Akibatnya, kita melihat gejala, bukan akar. Kita melihat utang yang menumpuk tanpa melihat konsumerisme yang menyebabkannya. Kita melihat polarisasi tanpa melihat erosi kekeluargaan yang melatarbelakanginya. Kita melihat krisis iklim tanpa melihat keserakahan yang mendorongnya. Kita melihat kesepian tanpa melihat fragmentasi komunitas yang menghasilkannya.</p>
+
+        <h3>12.2 Empat Temuan Utama</h3>
+
+        <h4>Pertama, fragmentasi pengetahuan adalah akar krisis multidimensi.</h4>
+        <p>Respons terhadapnya tidak bisa parsial: ia harus teologis, ekonomis, sosial, dan epistemologis sekaligus. Kita tidak bisa hanya berdoa tanpa mengubah struktur. Kita tidak bisa hanya mengubah struktur tanpa mengubah hati. Kita tidak bisa hanya mengubah hati tanpa mengubah sistem. Kita tidak bisa hanya mengubah sistem tanpa mengubah cara kita memahami dunia.</p>
+
+        <h4>Kedua, qana'ah bukan sekadar nilai spiritual, melainkan mekanisme korektif.</h4>
+        <p>Ia adalah mekanisme korektif terhadap budaya konsumtif dan penyangga psikologis terhadap tekanan sistem ekonomi yang eksploitatif. Korelasi negatif yang sangat kuat (r = -0,886) antara qana'ah dan perilaku konsumtif memberikan bukti awal bahwa internalisasi nilai spiritual dapat menjadi penyangga terhadap tekanan sistem.</p>
+        <p>Tetapi qana'ah bukan sikap pasif. Ia adalah bentuk perlawanan halus terhadap narasi bahwa kebahagiaan dapat dibeli. Ia adalah pernyataan bahwa manusia lebih dari sekadar konsumen. Ia adalah penegasan bahwa nilai manusia tidak diukur dari apa yang ia miliki, melainkan dari siapa ia di hadapan Tuhan.</p>
+
+        <h4>Ketiga, rahmatan lil 'alamin harus dioperasionalkan sebagai praktik konkret.</h4>
+        <p>Bukan sebagai slogan, melainkan sebagai praktik dalam tiga arena: menghadapi yang berbeda dengan mendengarkan sungguh-sungguh; mengelola konflik dengan memisahkan orang dari pendapatnya; menghadapi kekuasaan dengan melawan dengan cara yang benar.</p>
+        <p>Rahmatan lil 'alamin bukan tentang menghapus perbedaan. Ia adalah tentang mengelola perbedaan dengan kasih sayang. Ia adalah tentang mengakui bahwa perbedaan adalah sunnatullah, bukan kutukan. Ia adalah tentang melihat yang lain bukan sebagai ancaman, melainkan sebagai keluarga.</p>
+
+        <h4>Keempat, perlawanan struktural memiliki keterbatasan.</h4>
+        <p>De-dolarisasi, BRICS, dan gerakan-gerakan geopolitik lainnya tidak identik dengan perlawanan ideologis. Mereka adalah perlawanan kekuasaan, bukan perlawanan nilai. Transformasi harus disertai perubahan dari bawah: qana'ah, muhasabah, dan penguatan komunitas lokal.</p>
+        <p>Tanpa perubahan dari bawah, perubahan dari atas tidak akan bertahan. Tanpa perubahan dari atas, perubahan dari bawah tidak akan menyebar. Keduanya harus berjalan bersama.</p>
+
+        <h3>12.3 Manusia yang Tidak Sempurna</h3>
+        <p>Manusia — yang diciptakan lemah dan tidak sempurna — tidak dirancang untuk hidup sendiri. Ia dirancang untuk hidup bersama, saling menjaga, saling mengingatkan, saling mengasihi. Itulah rahmatan lil 'alamin. Itulah rumah yang harus kita jaga bersama.</p>
+        <p>Tetapi rumah ini tidak dijaga dengan slogan. Ia dijaga dengan muhasabah — dengan keberanian untuk melihat ke dalam dan mengakui kelemahan sendiri. Ia dijaga dengan qana'ah — dengan kemampuan untuk merasa cukup dan tidak dikuasai oleh keinginan. Ia dijaga dengan ukhuwah — dengan kesediaan untuk merangkul yang berbeda dan melihat mereka sebagai keluarga. Ia dijaga dengan keadilan — dengan keberanian untuk melawan ketidakadilan, bahkan ketika itu tidak nyaman.</p>
+
+        <h3>12.4 Rahmatan lil 'Alamin sebagai Arah</h3>
+        <p>Rahmatan lil 'alamin bukan tujuan akhir. Ia adalah arah. Kita tidak akan pernah mencapai masyarakat yang sepenuhnya penuh rahmat — karena manusia diciptakan lemah. Tetapi kita bisa bergerak ke arah itu.</p>
+        <p>Setiap langkah kecil — setiap muhasabah, setiap qana'ah, setiap percakapan yang jujur dengan yang berbeda — adalah bagian dari perjalanan. Peta ini tidak menjanjikan sampai. Ia hanya menunjukkan arah. Dan kadang, menunjukkan arah sudah cukup untuk membuat kita melangkah.</p>
+
+        <h3>12.5 Pesan Penutup</h3>
+        <div class="box-note">
+            Saya tidak meminta Anda mengubah dunia hari ini. Saya hanya meminta Anda berhenti sejenak dan bertanya:<br><br>
+            <strong>SUDAHKAH AKU MENJADI RAHMAT BAGI ORANG-ORANG DI SEKITARKU?</strong><br><br>
+            Jika belum, mari mulai dari sini. Dari diri kita. Hari ini.<br><br>
+            Wallahu a'lam bish-shawab.
+        </div>
+    </div>
+
+    <!-- ==================== HALAMAN 14: BAB 13 ==================== -->
+    <div class="page" id="page14">
+        <h1>BAB 13</h1>
+        <h2>AGENDA RISET DAN AKSI</h2>
+
+        <h3>13.1 Mengapa Agenda Riset dan Aksi?</h3>
+        <p>Tulisan ini bukan riset akademis dalam arti ketat. Ia adalah peta reflektif — sebuah upaya untuk menyambung titik-titik yang selama ini terpisah. Karena itu, ia tidak berhenti pada analisis. Ia juga merumuskan agenda riset dan aksi yang dapat ditindaklanjuti. Agenda ini bukanlah daftar lengkap. Ia adalah titik awal — undangan untuk berpikir bersama, untuk menguji, untuk mengkritik, dan untuk mengembangkan.</p>
+
+        <h3>13.2 Agenda Riset Mendatang</h3>
+
+        <h4>Pertama, Studi Longitudinal tentang Qana'ah dan Perilaku Konsumtif.</h4>
+        <p>Studi yang ada saat ini bersifat cross-sectional — ia mengukur korelasi pada satu titik waktu. Untuk menguji kausalitas, diperlukan studi longitudinal — studi yang mengikuti responden selama beberapa tahun. Studi ini harus: melibatkan sampel yang lebih luas dan beragam; mengukur qana'ah dan perilaku konsumtif secara berulang; mengontrol variabel perancu; menggunakan metode statistik yang tepat untuk menguji arah kausalitas.</p>
+        <p>Pertanyaan penelitian: Apakah peningkatan qana'ah menyebabkan penurunan perilaku konsumtif? Ataukah sebaliknya? Ataukah keduanya disebabkan oleh faktor ketiga?</p>
+
+        <h4>Kedua, Eksperimen Dakwah Digital.</h4>
+        <p>Dakwah digital sering dikritik karena hanya memengaruhi kognisi, bukan perilaku. Untuk menguji ini, diperlukan eksperimen sosial yang membandingkan kelompok yang menerima dakwah digital dengan kelompok kontrol. Eksperimen ini harus: mengukur perubahan perilaku, bukan hanya pengetahuan; menggunakan kelompok kontrol yang tepat; melibatkan sampel yang representatif; mengukur efek jangka panjang, bukan hanya jangka pendek.</p>
+
+        <h4>Ketiga, Model Ekonomi Islam Skala Komunitas.</h4>
+        <p>Model ekonomi Islam sering dibahas pada level makro. Tetapi ada juga model yang beroperasi pada level komunitas: BMT, koperasi syariah, waqf produktif. Studi ini harus: mengkaji model-model yang sudah ada di Indonesia, Malaysia, dan Turki; mengukur dampaknya terhadap kesejahteraan anggota; mengidentifikasi faktor keberhasilan dan kegagalan; merumuskan model yang dapat direplikasi.</p>
+
+        <h4>Keempat, Dialog Lintas Disiplin.</h4>
+        <p>Fragmentasi pengetahuan tidak bisa diatasi oleh satu disiplin saja. Diperlukan dialog lintas disiplin: ekonomi, teologi, psikologi, sosiologi, ilmu lingkungan. Dialog ini harus: melibatkan para ahli dari berbagai bidang; berfokus pada masalah nyata, bukan perdebatan teoretis; menghasilkan rekomendasi yang dapat ditindaklanjuti; mengembangkan kerangka analitis yang integratif.</p>
+
+        <h4>Kelima, Analisis Wacana Kritis Polarisasi Digital.</h4>
+        <p>Polarisasi digital bukan hanya masalah teknologi; ia adalah masalah bahasa dan kekuasaan. Analisis wacana kritis dapat mengungkap: bagaimana bahasa digunakan untuk memecah belah; bagaimana algoritma memperkuat polarisasi; siapa yang diuntungkan dari polarisasi; bagaimana membangun wacana yang lebih inklusif.</p>
+
+        <h3>13.3 Agenda Aksi</h3>
+        <p>Agenda riset harus disertai agenda aksi. Riset tanpa aksi adalah kemewahan; aksi tanpa riset adalah kebutaan.</p>
+
+        <h4>Level Individu</h4>
+        <ul>
+            <li><strong>Mulai muhasabah harian.</strong> Luangkan 10-15 menit sebelum tidur untuk bertanya: Apa yang saya lakukan hari ini yang membangun? Apa yang merusak? Apa yang bisa saya perbaiki besok?</li>
+            <li><strong>Internalisasi qana'ah.</strong> Sebelum membeli sesuatu, tanyakan: apakah saya benar-benar membutuhkannya? Sebelum mengeluh, hitung apa yang sudah dimiliki.</li>
+            <li><strong>Bangun percakapan yang jujur dengan yang berbeda.</strong> Cari seseorang yang berbeda pandangan. Ajak ia berbicara — bukan untuk berdebat, tetapi untuk memahami.</li>
+        </ul>
+
+        <h4>Level Komunitas</h4>
+        <ul>
+            <li><strong>Hidupkan majelis dan komunitas lokal.</strong> Majelis taklim, kelompok pengajian, koperasi warga, kegiatan sosial.</li>
+            <li><strong>Kembangkan ekonomi komunitas berbasis syariah.</strong> Mulailah dari skala kecil: kumpulkan modal dari anggota, berikan pembiayaan tanpa bunga, bagikan keuntungan dan kerugian secara adil.</li>
+            <li><strong>Praktikkan dialog kehidupan lintas iman.</strong> Kenali tetangga yang berbeda agama. Bantu mereka ketika kesulitan. Jangan jadikan perbedaan sebagai penghalang.</li>
+        </ul>
+
+        <h4>Level Pembuat Kebijakan</h4>
+        <ul>
+            <li><strong>Integrasikan nilai rahmatan lil 'alamin dalam kurikulum pendidikan.</strong> Pendidikan bukan hanya transfer pengetahuan, tetapi pembentukan karakter.</li>
+            <li><strong>Dukung zakat dan wakaf produktif.</strong> Zakat dan wakaf adalah instrumen redistribusi yang dapat mengurangi ketimpangan.</li>
+            <li><strong>Atur algoritma media sosial agar tidak memecah belah.</strong> Mendorong transparansi algoritma, mengatur konten yang memicu kebencian.</li>
+            <li><strong>Bangun kebijakan ekonomi yang berkeadilan.</strong> Kebijakan ekonomi harus berakar pada maqasid al-shariah.</li>
+        </ul>
+
+        <h3>13.4 Penutup Agenda</h3>
+        <p>Agenda ini bukanlah daftar lengkap. Ia adalah titik awal. Setiap orang — individu, komunitas, pembuat kebijakan — dapat menambahkan, mengubah, atau mengkritik. Yang penting bukanlah kesempurnaan agenda. Yang penting adalah <strong>kemauan untuk bertindak</strong>. Tanpa kemauan, agenda terbaik pun tidak akan berarti.</p>
+    </div>
+
+    <!-- ==================== HALAMAN 15: REFERENSI ==================== -->
+    <div class="page" id="page15">
+        <h1>REFERENSI</h1>
+
+        <h3>Daftar Referensi</h3>
+        <ul class="ref-list">
+            <li>Al-Attas, S. M. N. (1993). <em>Islam and Secularism</em>. Kuala Lumpur: ISTAC.</li>
+            <li>Al-Baghdadi, Abu Manshur. <em>Al-Farq bain al-Firaq</em>.</li>
+            <li>Al-Baihaqi. <em>Syu'ab al-Iman</em>.</li>
+            <li>Al-Bukhari, Muhammad bin Ismail. <em>Shahih al-Bukhari</em>.</li>
+            <li>Al-Ghazali, Abu Hamid. (2004). <em>Ihya' Ulum al-Din</em>. Beirut: Dar al-Ma'rifah.</li>
+            <li>Al-Ghazali, Abu Hamid. <em>Faishal al-Tafriqah</em>.</li>
+            <li>Anis Malik Thoha. (2005). Trends and Issues in Contemporary Western Study of Religion. <em>Jurnal Pelita Zaman</em>, 20(1), 1–20.</li>
+            <li>Araripe, T., Peruffo, L., &amp; Cunha, A. M. (2025). O BRICS e a agenda de desdolarização: Avanços e desafios na presidência do Brasil. <em>Revista Tempo do Mundo</em>. Brasília: IPEA.</li>
+            <li>Armstrong, K. (1993). <em>A History of God: The 4,000-Year Quest of Judaism, Christianity, and Islam</em>. New York: Ballantine Books.</li>
+            <li>Asy-Syahrastani. <em>Al-Milal wan Nihal</em>.</li>
+            <li>Badan Kependudukan dan Keluarga Berencana Nasional. (2025). <em>Survei Kesepian Remaja Indonesia</em>. Jakarta: BKKBN.</li>
+            <li>Bandura, Albert. (2016). <em>Moral Disengagement: How People Do Harm and Live with Themselves</em>. New York: Worth Publishers.</li>
+            <li>Chapra, M. U. (1992). <em>Islam and the Economic Challenge</em>. Leicester: Islamic Foundation.</li>
+            <li>Chapra, M. U. (2000). <em>The Future of Economics: An Islamic Perspective</em>. Leicester: Islamic Foundation.</li>
+            <li>Chapra, M. U. (2008). <em>Muslim Civilization: The Causes of Decline and the Need for Reform</em>. Leicester: Islamic Foundation.</li>
+            <li>Dalio, R. (2025). <em>How Countries Go Broke: The Big Debt Cycle</em>. Bridgewater Associates.</li>
+            <li>Fawwaz, S. (2025). <em>Hubungan qana'ah dengan perilaku konsumtif pada wanita dalam berbelanja online: Studi pada mahasiswi UIN Walisongo Semarang</em> (Skripsi S1). Universitas Islam Negeri Walisongo Semarang.</li>
+            <li>Festinger, Leon. (1957). <em>A Theory of Cognitive Dissonance</em>. Stanford: Stanford University Press.</li>
+            <li>Health Collaborative Center. (2023). <em>Survei Kesepian di Jakarta, Depok, Tangerang, dan Bekasi</em>. Jakarta: HCC.</li>
+            <li>Ibnu Hazm, Ali bin Ahmad. <em>Al-Fasl fi al-Milal wa al-Ahwa' wa al-Nihal</em>.</li>
+            <li>Ibnu Khaldun, Abdurrahman. <em>Muqaddimah</em>.</li>
+            <li>Ibnu Majah, Muhammad bin Yazid. <em>Sunan Ibnu Majah</em>.</li>
+            <li>Ibnu Qayyim al-Jawziyyah. <em>Madarij al-Salikin</em>.</li>
+            <li>Ibnu Taimiyah. <em>Majmu' al-Fatawa</em>.</li>
+            <li>Institute of International Finance. (2025). <em>Global Debt Monitor</em>. Washington, DC: IIF.</li>
+            <li>Jacobs, G. (2025). Science, Society, and Sustainability: Toward a New Paradigm of Integrated Knowledge for Human Security. <em>Cadmus</em>, 5(5), 84–90.</li>
+            <li>Jirhanuddin. (2010). <em>Perbandingan Agama: Pengantar Studi Memahami Agama-Agama</em>. Yogyakarta: Pustaka Pelajar.</li>
+            <li>Kahneman, Daniel. (2011). <em>Thinking, Fast and Slow</em>. New York: Farrar, Straus and Giroux.</li>
+            <li>Kahneman, Daniel &amp; Tversky, Amos. (1974). Judgment Under Uncertainty: Heuristics and Biases. <em>Science</em>, Vol. 185, No. 4157, hal. 1124-1131.</li>
+            <li>Kruger, Justin &amp; Dunning, David. (1999). Unskilled and Unaware of It. <em>Journal of Personality and Social Psychology</em>, Vol. 77, No. 6, hal. 1121-1134.</li>
+            <li>Kuran, T. (2004). <em>Islam and Mammon: The Economic Predicaments of Islamism</em>. Princeton: Princeton University Press.</li>
+            <li>Lacalle, D. (2025). <em>The Decline of Developed Nations' Fiat Money</em>. Mises Institute.</li>
+            <li>Lapidus, I. M. (2002). <em>A History of Islamic Societies</em>. Cambridge: Cambridge University Press.</li>
+            <li>Mirakhor, A. (2025). Monetary Policy in Debt System and in Risk-Sharing System. <em>Journal of Critical Realism in Socio-Economics (JOCRISE)</em>, 3(04).</li>
+            <li>Monash Data &amp; Democracy Research Hub. (2025). <em>Laporan Analisis Percakapan Digital Indonesia, 25–31 Agustus 2025</em>. Melbourne: Monash University.</li>
+            <li>Muhammadiyah. (2025, 21 Juni). Akademi Dai Digital Muhammadiyah Resmi Dibuka.</li>
+            <li>Muslim bin al-Hajjaj. <em>Shahih Muslim</em>.</li>
+            <li>Nahdlatul Ulama. (2026, 4 Februari). Nahdlatul Ulama dan Persaudaraan Manusia di Dunia yang Terbelah. <em>NU Online</em>.</li>
+            <li>Pariser, Eli. (2011). <em>The Filter Bubble</em>. New York: Penguin Books.</li>
+            <li>Pronin, Emily, Lin, Daniel Y., &amp; Ross, Lee. (2002). The Bias Blind Spot. <em>Personality and Social Psychology Bulletin</em>, Vol. 28, No. 3, hal. 369-381.</li>
+            <li>Reinhart, C. M., &amp; Rogoff, K. S. (2009). <em>This Time Is Different: Eight Centuries of Financial Folly</em>. Princeton: Princeton University Press.</li>
+            <li>Romli, M. T., &amp; Noorhidayati, S. (n.d.). Millah Ibrahim (Abrahamic Religions) dalam Kajian Al-Qur'an. <em>Hermeneutik: Jurnal Ilmu Al-Qur'an dan Tafsir</em>.</li>
+            <li>Seligman, Martin E. P. &amp; Peterson, Christopher. (2004). <em>Character Strengths and Virtues</em>. New York: Oxford University Press.</li>
+            <li>Stuenkel, O. (2016). <em>The BRICS and the Future of Global Order</em>. Lanham: Lexington Books.</li>
+            <li>Sunstein, Cass R. (2001). <em>Echo Chambers</em>. Princeton: Princeton University Press.</li>
+            <li>Tajfel, Henri &amp; Turner, John C. (1986). The Social Identity Theory of Intergroup Behavior. Dalam <em>Psychology of Intergroup Relations</em>. Chicago: Nelson-Hall, hal. 7–24.</li>
+            <li>Tripp, C. (2006). <em>Islam and the Moral Economy: The Challenge of Capitalism</em>. Cambridge: Cambridge University Press.</li>
+            <li>'Ufairoh, L. (2025). Building Social Solidarity within the Rahmatan lil 'Alamin Framework. <em>DEUJIS</em>.</li>
+            <li>World Inequality Database. (2025). <em>World Inequality Report 2025</em>. Paris: WID.</li>
+            <li>Zaman, A. (2015). <em>Ekonomi Islam: Antitesis Ekonomi Kapitalis</em>. (Terjemahan Indonesia).</li>
+        </ul>
+    </div>
+
+    <!-- ==================== HALAMAN 16: LAMPIRAN ==================== -->
+    <div class="page" id="page16">
+        <h1>LAMPIRAN</h1>
+
+        <h3>Lampiran A: Kode Rujukan Ayat dan Hadis Utama</h3>
+        <ul>
+            <li>A1. QS. An-Nisa 4:28 – Manusia diciptakan lemah.</li>
+            <li>A2. HR. Tirmidzi no. 2499; Ibnu Majah no. 4251 – Setiap anak Adam berbuat salah.</li>
+            <li>A3. HR. Bukhari no. 401; Muslim no. 570 – Nabi mengakui dirinya manusia biasa.</li>
+            <li>A4. HR. Tirmidzi no. 3334; Ibnu Majah no. 4244 – Titik hitam di hati akibat dosa.</li>
+            <li>A5. QS. An-Nisa 4:79 – Bencana akibat kesalahan diri sendiri.</li>
+            <li>A6. QS. Al-Baqarah 2:74 – Hati yang keras seperti batu.</li>
+            <li>A7. HR. Abu Daud no. 4596; Tirmidzi no. 2640 – Hadis 73 golongan.</li>
+            <li>A8. HR. Abu Daud no. 4597; Ibnu Majah no. 3992 – Golongan selamat adalah Al-Jama'ah.</li>
+            <li>A9. HR. Tirmidzi no. 2641 – Golongan selamat mengikuti Nabi dan sahabat.</li>
+            <li>A10. QS. Al-Hujurat 49:12 – Larangan berprasangka buruk.</li>
+            <li>A11. QS. Al-Hasyr 59:18 – Perintah muhasabah.</li>
+            <li>A12. HR. Tirmidzi no. 2459 – Orang cerdas menghisab dirinya.</li>
+            <li>A13. HR. Bukhari no. 6104; Muslim no. 60 – Larangan mengkafirkan.</li>
+            <li>A14. QS. Al-Hajj 22:17 – Hisab hanya hak Allah.</li>
+            <li>A15. QS. Al-Hujurat 49:13 – Keragaman sebagai sunnatullah.</li>
+            <li>A16. QS. Ali Imran 3:64 – Kalimatun sawa.</li>
+            <li>A17. QS. Al-Kahfi 18:7 – Dunia sebagai ujian.</li>
+            <li>A18. QS. Al-Ashr 103:1-3 – Sumpah demi masa.</li>
+            <li>A19. HR. Tirmidzi no. 2417 – Hisab umur, masa muda, harta, ilmu.</li>
+            <li>A20. QS. Al-Baqarah 2:30 – Manusia sebagai khalifah.</li>
+            <li>A21. HR. Bukhari no. 893; Muslim no. 1829 – Setiap orang pemimpin.</li>
+            <li>A22. QS. Al-Anbiya 21:107 – Nabi sebagai rahmatan lil 'alamin.</li>
+            <li>A23. HR. Bukhari no. 6013; Muslim no. 2318 – Barangsiapa tidak menyayangi.</li>
+            <li>A24. HR. Bukhari no. 2365; Muslim no. 2245 – Wanita masuk neraka karena kucing, lelaki masuk surga karena anjing.</li>
+        </ul>
+
+        <h3>Lampiran B: Kode Rujukan Bias Kognitif</h3>
+        <ul>
+            <li>B1. Bias Konfirmasi – Rujukan: Kahneman &amp; Tversky, 1974.</li>
+            <li>B2. Bias Terlalu Percaya Diri – Rujukan: Kahneman, 2011.</li>
+            <li>B3. Titik Buta Bias – Rujukan: Pronin, Lin, &amp; Ross, 2002.</li>
+            <li>B4. Efek Dunning-Kruger – Rujukan: Kruger &amp; Dunning, 1999.</li>
+            <li>B5. Bias Ingrup-Outgrup – Rujukan: Tajfel &amp; Turner, 1986.</li>
+        </ul>
+
+        <h3>Lampiran C: Kode Rujukan Konsep Psikologi dan Padanan Islam</h3>
+        <ul>
+            <li>C1. Desensitisasi Moral / Hati yang Keras – Rujukan: Bandura, 2016; QS. Al-Baqarah 2:74.</li>
+            <li>C2. Disonansi Kognitif / Mencari Pembenaran – Rujukan: Festinger, 1957.</li>
+            <li>C3. Regulasi Diri / Muhasabah – Rujukan: Al-Ghazali, Ihya Ulumuddin; QS. Al-Hasyr 59:18.</li>
+            <li>C4. Teori Labeling – Rujukan: HR. Bukhari no. 6104; Muslim no. 60.</li>
+            <li>C5. Pendekatan Perilaku – Kaidah "benci kemaksiatannya, bukan orangnya".</li>
+            <li>C6. Tazkiyah / Penyucian Jiwa – Rujukan: Al-Ghazali, Ihya Ulumuddin; Ibnu Qayyim, Madarij al-Salikin.</li>
+        </ul>
+
+        <h3>Lampiran D: Kode Rujukan Tokoh Golden Age Islam</h3>
+        <ul>
+            <li>D1. Al-Khawarizmi (w. 850 M) – Matematika, aljabar, algoritma.</li>
+            <li>D2. Ibn al-Haytham (w. 1040 M) – Fisika optik, metode ilmiah.</li>
+            <li>D3. Ibnu Sina (w. 1037 M) – Kedokteran, Al-Qanun fi al-Tibb.</li>
+            <li>D4. Ibnu Khaldun (w. 1406 M) – Sosiologi, Muqaddimah, teori ashabiyah.</li>
+        </ul>
+
+        <h3>Lampiran E: Alur Peta Jalan Riset</h3>
+        <p>Alur riset ini berawal dari fitrah manusia yang lemah dan tidak sempurna (A1-A4; B1-B5). Dari sana muncul dua jalur:</p>
+        <p><strong>Jalur pertama (negatif):</strong> jika tidak dimuhasabahi → desensitisasi moral (C1) → disonansi kognitif (C2) → fanatisme (B5, D4) → perpecahan (A7).</p>
+        <p><strong>Jalur kedua (positif):</strong> jika dimuhasabahi (A11-A12) → kesadaran diri (C3) → menahan diri dari menghakimi (A13-A14, C4-C5) → menghormati keragaman (A15-A16) → belajar dari sejarah (D1-D4) → pelaksanaan tugas khalifah (A17-A21) → rahmatan lil 'alamin (A22-A24).</p>
+        <p>Dengan demikian, riset ini menegaskan bahwa ketidaksempurnaan manusia adalah titik tolak kesadaran bahwa perpecahan bukanlah takdir, melainkan buah dari kelalaian bermuhasabah. Muhasabah yang tulus akan mengantarkan pada puncak misi hidup menjadi rahmat bagi seluruh alam.</p>
+
+        <h3>Lampiran F: Indikator Rahmatan lil 'Alamin</h3>
+        <h4>Level Mikro (Individu)</h4>
+        <ul>
+            <li>Frekuensi muhasabah harian</li>
+            <li>Tingkat qana'ah (diukur dengan skala psikometri)</li>
+            <li>Kemampuan menahan diri dari ujaran kebencian</li>
+            <li>Keterbukaan terhadap perbedaan pendapat</li>
+        </ul>
+        <h4>Level Meso (Komunitas)</h4>
+        <ul>
+            <li>Jumlah komunitas yang mengelola BMT/koperasi syariah</li>
+            <li>Tingkat partisipasi dalam kegiatan sosial</li>
+            <li>Tingkat kepercayaan antar kelompok</li>
+            <li>Kualitas dialog lintas iman</li>
+        </ul>
+        <h4>Level Makro (Kebijakan)</h4>
+        <ul>
+            <li>Tingkat ketimpangan (Gini ratio)</li>
+            <li>Tingkat kesepian (survei nasional)</li>
+            <li>Tingkat polarisasi digital (analisis wacana)</li>
+            <li>Proporsi anggaran untuk program redistribusi</li>
+        </ul>
+
+        <hr class="separator">
+
+        <h3>Glosarium</h3>
+        <ul>
+            <li><span class="glossary-term">'Adl:</span> Keadilan.</li>
+            <li><span class="glossary-term">'Asabiyyah:</span> Solidaritas kelompok; istilah yang dipopulerkan Ibnu Khaldun.</li>
+            <li><span class="glossary-term">Da'ifan:</span> Lemah (bentuk kata sifat yang menunjukkan kelemahan melekat).</li>
+            <li><span class="glossary-term">Fitrah:</span> Potensi bawaan manusia yang cenderung pada kebenaran dan kebaikan.</li>
+            <li><span class="glossary-term">Kalimatun sawa:</span> Kalimat pegangan yang sama; titik temu.</li>
+            <li><span class="glossary-term">Maqasid al-shariah:</span> Tujuan-tujuan syariat (melindungi agama, jiwa, akal, keturunan, harta).</li>
+            <li><span class="glossary-term">Muhasabah:</span> Introspeksi diri; evaluasi terhadap setiap tindakan dan niat.</li>
+            <li><span class="glossary-term">Mudarabah:</span> Kontrak bagi hasil antara pemilik modal dan pengusaha.</li>
+            <li><span class="glossary-term">Murabahah:</span> Jual beli dengan margin keuntungan yang disepakati.</li>
+            <li><span class="glossary-term">Musharakah:</span> Kemitraan modal antara dua pihak atau lebih.</li>
+            <li><span class="glossary-term">Qana'ah:</span> Sikap merasa cukup; mekanisme korektif terhadap konsumerisme.</li>
+            <li><span class="glossary-term">Rahmatan lil 'alamin:</span> Rahmat bagi seluruh alam; tujuan universal risalah Islam.</li>
+            <li><span class="glossary-term">Tazkiyah:</span> Penyucian jiwa.</li>
+            <li><span class="glossary-term">Ukhuwah:</span> Persaudaraan.</li>
+            <li><span class="glossary-term">Wallahu a'lam bish-shawab:</span> Hanya Allah yang Maha Mengetahui yang benar.</li>
+        </ul>
+    </div>
+
+    <!-- ==================== NAVIGASI ==================== -->
+    <div class="nav">
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; width: 100%;">
+            <button onclick="changePage(-1)" id="prevBtn">◀ Sebelumnya</button>
+            <button onclick="openToc()" class="toc-btn">📑 Daftar Isi</button>
+            <button onclick="changePage(1)" id="nextBtn">Selanjutnya ▶</button>
+        </div>
+        <div class="page-indicator" id="pageIndicator">Halaman 1 / 16</div>
+    </div>
+
+</div>
+
+<!-- ==================== TOC OVERLAY ==================== -->
+<div class="toc-overlay" id="tocOverlay">
+    <div class="toc-box">
+        <h2>📑 Daftar Isi</h2>
+        <ul>
+            <li onclick="goToPage(1)">1. Cover &amp; Abstrak</li>
+            <li onclick="goToPage(2)">2. Bab 1 – Pendahuluan</li>
+            <li onclick="goToPage(3)">3. Bab 2 – Metodologi</li>
+            <li onclick="goToPage(4)">4. Bab 3 – Fitrah &amp; Ketidaksempurnaan Manusia</li>
+            <li onclick="goToPage(5)">5. Bab 4 – Islam vs Kapitalisme</li>
+            <li onclick="goToPage(6)">6. Bab 5 – Sistem Moneter &amp; Krisis Utang</li>
+            <li onclick="goToPage(7)">7. Bab 6 – Geopolitik &amp; De-Dolarisasi</li>
+            <li onclick="goToPage(8)">8. Bab 7 – Sejarah Peradaban Islam</li>
+            <li onclick="goToPage(9)">9. Bab 8 – Millah Ibrahim</li>
+            <li onclick="goToPage(10)">10. Bab 9 – Dakwah Digital</li>
+            <li onclick="goToPage(11)">11. Bab 10 – Implementasi Kebijakan</li>
+            <li onclick="goToPage(12)">12. Bab 11 – Hasil dan Pembahasan</li>
+            <li onclick="goToPage(13)">13. Bab 12 – Kesimpulan</li>
+            <li onclick="goToPage(14)">14. Bab 13 – Agenda Riset dan Aksi</li>
+            <li onclick="goToPage(15)">15. Referensi</li>
+            <li onclick="goToPage(16)">16. Lampiran &amp; Glosarium</li>
+        </ul>
+        <button class="close-toc" onclick="closeToc()">Tutup</button>
+    </div>
+</div>
+
+<script>
+    let currentPage = 1;
+    const totalPages = 16;
+
+    function updatePage() {
+        document.querySelectorAll('.page').forEach((el, idx) => {
+            el.classList.toggle('active', idx === currentPage - 1);
+        });
+        document.getElementById('pageIndicator').textContent = `Halaman ${currentPage} / ${totalPages}`;
+        document.getElementById('prevBtn').disabled = (currentPage === 1);
+        document.getElementById('nextBtn').disabled = (currentPage === totalPages);
+        window.scrollTo(0, 0);
+    }
+
+    function changePage(delta) {
+        const newPage = currentPage + delta;
+        if (newPage >= 1 && newPage <= totalPages) {
+            currentPage = newPage;
+            updatePage();
+            closeToc();
+        }
+    }
+
+    function goToPage(num) {
+        if (num >= 1 && num <= totalPages) {
+            currentPage = num;
+            updatePage();
+            closeToc();
+        }
+    }
+
+    function openToc() {
+        document.getElementById('tocOverlay').classList.add('active');
+    }
+
+    function closeToc() {
+        document.getElementById('tocOverlay').classList.remove('active');
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowLeft') { changePage(-1); e.preventDefault(); }
+        else if (e.key === 'ArrowRight') { changePage(1); e.preventDefault(); }
+        else if (e.key === 'Escape') { closeToc(); }
+    });
+
+    document.getElementById('tocOverlay').addEventListener('click', function(e) {
+        if (e.target === this) { closeToc(); }
+    });
+
+    updatePage();
+</script>
+
+</body>
+</html>
